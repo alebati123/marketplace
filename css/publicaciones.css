@@ -1,0 +1,227 @@
+/* publicciones.css */
+
+.page-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+}
+
+/* Sidebar Filtros */
+.sidebar-filters {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.filter-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.filter-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.filter-group h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-main);
+}
+
+.search-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input i {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-text-muted);
+}
+
+.search-input input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.search-input input:focus {
+    border-color: var(--color-primary);
+}
+
+/* Controles personalizados Radios / Checkboxes */
+.filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.custom-radio,
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+.custom-radio:hover,
+.custom-checkbox:hover {
+    color: var(--color-text-main);
+}
+
+.price-range {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.price-range input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    outline: none;
+}
+
+.price-range input:focus {
+    border-color: var(--color-primary);
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+/* Contenido Productos */
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.products-header h2 {
+    font-size: 1.8rem;
+}
+
+.results-count {
+    color: var(--color-text-muted);
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
+.sort-by {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-by select {
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    background: var(--color-surface);
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* Grid importado en global (product-card) pero ajustamos columnas */
+.products-content .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.page-numbers span {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.page-numbers span:hover {
+    background: var(--color-border);
+}
+
+.page-numbers span.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mobile-filters-btn {
+    display: none;
+    /* Oculto en PC */
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .page-container {
+        grid-template-columns: 1fr;
+    }
+
+    .mobile-filters-btn {
+        display: inline-flex;
+    }
+
+    .sidebar-filters {
+        position: static;
+        margin-bottom: 2rem;
+        display: none;
+        /* Oculto por defecto en móvil */
+    }
+
+    .sidebar-filters.show {
+        display: block;
+        /* Se muestra al presionar el botón */
+    }
+}
+
+@media (max-width: 600px) {
+    .products-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

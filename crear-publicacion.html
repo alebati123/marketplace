@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Publicación - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/crear-publicacion.css">
+</head>
+
+<body>
+
+    <!-- Navbar Minimalista Estilo Lambertucci -->
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand" style="flex-direction: column; display: flex;">
+                <h1 style="margin:0;">LAMBERTUCCI</h1>
+                <span style="font-size: 0.7rem; color: var(--color-secondary); letter-spacing: 2px;">Compra &
+                    Venta</span>
+            </a>
+            <!-- Botón de Hamburguesa para Móviles -->
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="page-create section-padding">
+        <div class="container create-container">
+
+            <div class="create-header">
+                <h1>Publicar un Artículo</h1>
+                <p>Completa la información para que los compradores puedan encontrar tu producto fácilmente.</p>
+            </div>
+
+            <form class="create-form" id="form-crear">
+
+                <!-- Sección 1: Fotos -->
+                <div class="form-section">
+                    <h2><i class='bx bx-camera'></i> Fotos del Artículo</h2>
+                    <p class="section-desc">Sube fotos de buena calidad. La primera foto será la principal.</p>
+
+                    <div class="upload-area">
+                        <div class="upload-placeholder">
+                            <i class='bx bx-cloud-upload'></i>
+                            <span>Haz clic o arrastra imágenes aquí</span>
+                            <small>Max. 5 fotos. Formatos JPG o PNG.</small>
+                        </div>
+                        <input type="file" multiple accept="image/*" class="file-input" id="fotos-input">
+                    </div>
+
+                    <div class="image-preview-container" id="preview-container">
+                        <!-- Preview Images JS goes here -->
+                    </div>
+                </div>
+
+                <!-- Sección 2: Información Básica -->
+                <div class="form-section">
+                    <h2><i class='bx bx-text'></i> Información Básica</h2>
+
+                    <div class="form-group">
+                        <label for="titulo">Título de la publicación *</label>
+                        <input type="text" id="titulo" class="form-control"
+                            placeholder="Ej: PlayStation 5 con 2 controles" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoria">Categoría *</label>
+                            <select id="categoria" class="form-control" required>
+                                <option value="" disabled selected>Cargando categorías...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="estado">Estado del producto *</label>
+                            <select id="estado" class="form-control" required>
+                                <option value="nuevo">Nuevo</option>
+                                <option value="como-nuevo">Usado - Como Nuevo</option>
+                                <option value="usado">Usado - Buen estado</option>
+                                <option value="usado-detalles">Usado - Con detalles</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio ($) *</label>
+                        <div style="position: relative;">
+                            <span
+                                style="position: absolute; left: 1rem; top: 0.9rem; color: var(--color-text-muted); font-weight: bold;">$</span>
+                            <input type="number" id="precio" class="form-control" placeholder="0"
+                                style="padding-left: 2.5rem;" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción *</label>
+                        <textarea id="descripcion" class="form-control" rows="6"
+                            placeholder="Describe los detalles, tiempo de uso, si tiene accesorios, etc."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-actions border-top">
+                    <!-- Demo action: solo redirige -->
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class='bx bx-check-circle'></i> Publicar Artículo Ahora
+                    </button>
+                    <p class="text-center mt-2" style="color: var(--color-text-muted); font-size: 0.9rem;">
+                        Al publicar, confirmas que tu número de WhatsApp registrado será visible para que te contacten.
+                    </p>
+                </div>
+
+            </form>
+        </div>
+    </main>
+    <script src="js/global.js"></script>
+    <script src="js/crear-publicacion.js"></script>
+</body>
+
+</html>

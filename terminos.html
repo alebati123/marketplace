@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - MarketPlace</title>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        .terms-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            padding: 3rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .terms-container h1 {
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .terms-container .last-updated {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .terms-content h2 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-secondary);
+            font-size: 1.3rem;
+        }
+
+        .terms-content p,
+        .terms-content ul {
+            margin-bottom: 1rem;
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+
+        .terms-content ul {
+            padding-left: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar Minimalista Estilo Lambertucci -->
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand" style="flex-direction: column; display: flex;">
+                <h1 style="margin:0;">LAMBERTUCCI</h1>
+                <span style="font-size: 0.7rem; color: var(--color-secondary); letter-spacing: 2px;">Compra &
+                    Venta</span>
+            </a>
+            <!-- Botón de Hamburguesa para Móviles -->
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
+                    Vender</a></li>
+            <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Quiero Vender</a>
+        </div>
+    </nav>
+
+    <main class="page-container container section-padding">
+        <div class="terms-container">
+            <h1>Términos y Condiciones de Uso</h1>
+            <p class="last-updated">Última actualización: Febrero 2026</p>
+
+            <div class="terms-content">
+                <p>Bienvenido a LAMBERTUCCI Compra & Venta ("el Sitio"). Al acceder, registrarte o publicar artículos en
+                    nuestro Sitio, aceptas expresamente los siguientes Términos y Condiciones. Lee detenidamente este
+                    documento antes de utilizar nuestros servicios.</p>
+
+                <h2>1. Naturaleza del Servicio</h2>
+                <p>El Sitio funciona exclusiva y estrictamente como un tablón de anuncios virtual o clasificados en
+                    línea. Nuestra plataforma se limita a proveer el espacio digital para que vendedores y compradores
+                    independientes puedan encontrarse y contactarse mutuamente.</p>
+                <p>LAMBERTUCCI <strong>no interviene</strong> en el perfeccionamiento de las operaciones realizadas
+                    entre los usuarios ni en las condiciones por ellos estipuladas para las mismas.</p>
+
+                <h2>2. Exención de Responsabilidad</h2>
+                <p>Dado que LAMBERTUCCI no es propietario de los artículos publicados, no tiene posesión de ellos, ni
+                    interviene en su entrega o pago, se establece expresamente que:</p>
+                <ul>
+                    <li>No nos hacemos responsables por la existencia, calidad, cantidad, estado, integridad o
+                        legitimidad de los bienes ofrecidos, adquiridos o enajenados por los Usuarios.</li>
+                    <li>No nos hacemos responsables por la exactitud o veracidad de los datos personales ingresados por
+                        los Usuarios.</li>
+                    <li>Cada Usuario (comprador o vendedor) comprende y acepta que es el único responsable por las
+                        ofertas o ventas que realiza, así como por las compras que efectúa.</li>
+                    <li>El Usuario renuncia desde ya a realizar cualquier reclamo legal, civil, penal o administrativo
+                        contra los creadores, dueños o administradores de la plataforma LAMBERTUCCI derivado del uso del
+                        sitio o transacciones fallidas, estafas, o inconvenientes entre las partes.</li>
+                </ul>
+
+                <h2>3. Operaciones entre Usuarios</h2>
+                <p>Toda comunicación, intercambio de información o transacción económica se realiza <strong>por fuera de
+                        la plataforma</strong> (ej. a través de WhatsApp prestablecido por el vendedor) bajo la total
+                    discreción y riesgo de los involucrados.</p>
+                <p>Recomendamos siempre tomar precauciones de seguridad estándar al encontrarse con vendedores ajenos,
+                    realizar las transacciones en lugares públicos y verificar la mercancía antes de emitir un pago.</p>
+
+                <h2>4. Publicaciones y Moderación</h2>
+                <p>El administrador de la plataforma se reserva el derecho exclusivo e inapelable de suspender, eliminar
+                    o modificar cualquier publicación, cuenta o imagen que considere inapropiada, fraudulenta, falsa, o
+                    que infrinja la ley, sin previo aviso ni derecho a compensación para el Usuario.</p>
+                <p>Está estrictamente prohibido publicar artículos ilegales, robados, armas de fuego, sustancias
+                    ilícitas o contenido que promueva la violencia y el odio.</p>
+
+                <h2>5. Aceptación</h2>
+                <p>Al hacer clic en el botón de creación de cuenta o al utilizar este servicio de cualquier otra manera,
+                    confirmas que has leído, entendido y aceptado incondicionalmente todos los puntos de estos Términos
+                    y Condiciones propuestos por la plataforma.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="window.history.back()" class="btn btn-outline"><i class='bx bx-left-arrow-alt'></i>
+                    Regresar</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center"
+            style="display: flex; flex-direction: column; align-items: center;">
+            <div class="navbar-brand" style="margin-bottom: 2rem;">
+                <h1>LAMBERTUCCI</h1>
+                <span>Compra & Venta</span>
+            </div>
+            <p>&copy; 2026 LAMBERTUCCI. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="js/global.js"></script>
+</body>
+
+</html>

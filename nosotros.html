@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/nosotros.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="inicio.html" class="navbar-brand">
+            <h1>LAMBERTUCCI</h1>
+            <span>Compra & Venta</span>
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
+                    Vender</a></li>
+            <li><a href="nosotros.html" class="nav-item active">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Quiero Vender</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Encabezado de la página -->
+        <header class="page-header">
+            <div class="container text-center">
+                <h1>Sobre Nosotros</h1>
+                <p>Nuestra misión es conectar personas para que compren y vendan de la manera más segura, rápida y
+                    directa posible.</p>
+            </div>
+        </header>
+
+        <!-- Sección de quiénes somos -->
+        <section class="about-section container section-padding">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2>¿Qué es MarketPlace?</h2>
+                    <p>Somos una plataforma pensada para facilitar el comercio local. A diferencia de otras páginas
+                        confusas, aquí puedes publicar en segundos, ver productos cerca tuyo y cuando estés decidido,
+                        contactar al vendedor directamente a través de WhatsApp sin intermediarios molestos o comisiones
+                        ocultas.</p>
+
+                    <ul class="features-list">
+                        <li><i class='bx bx-check-circle'></i> 100% Gratis para publicar</li>
+                        <li><i class='bx bx-check-circle'></i> Contacto directo y transparente</li>
+                        <li><i class='bx bx-check-circle'></i> Fácil, rápido y en tu celular</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        alt="Equipo de MarketPlace">
+                </div>
+            </div>
+        </section>
+
+        <!-- Valores de la empresa -->
+        <section class="values-section bg-light section-padding">
+            <div class="container">
+                <div class="values-grid">
+                    <div class="value-card">
+                        <i class='bx bx-shield-quarter'></i>
+                        <h3>Seguridad</h3>
+                        <p>Trabajamos para mantener una comunidad confiable donde los tratos se hagan con tranquilidad.
+                        </p>
+                    </div>
+                    <div class="value-card">
+                        <i class='bx bx-rocket'></i>
+                        <h3>Rapidez</h3>
+                        <p>Sin procesos largos ni validaciones interminables. Crear cuenta, subir foto y publicar.</p>
+                    </div>
+                    <div class="value-card">
+                        <i class='bx bx-group'></i>
+                        <h3>Comunidad</h3>
+                        <p>Fomentamos el comercio circular y apoyamos la economía de la ciudad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ubicación / Contacto -->
+        <section class="location-section container section-padding">
+            <div class="location-grid">
+                <div class="location-info">
+                    <h2>Nuestra Ubicación</h2>
+                    <p>¿Tienes dudas, sugerencias o quieres formar parte de nuestro equipo? Estamos a tu disposición en
+                        nuestras oficinas o medios digitales.</p>
+
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class='bx bx-map'></i>
+                            <div>
+                                <h4>Dirección</h4>
+                                <p>Casilda<br>Santa Fe, Argentina</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class='bx bx-envelope'></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p><a href="mailto:hola@mimarketplace.com"
+                                        style="color: inherit; text-decoration: none;">hola@mimarketplace.com</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class='bx bx-phone'></i>
+                            <div>
+                                <h4>Teléfono / WhatsApp</h4>
+                                <p><a href="https://wa.me/5493464682923" target="_blank"
+                                        style="color: inherit; text-decoration: none;">3464682923</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="location-map">
+                    <!-- Mapa embebido de Google Maps -->
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107122.95540964177!2d-61.21856860252187!3d-33.0485906660637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95b77eaeb88f9db5%3A0xcf9587bf15112cc!2sCasilda%2C%20Santa%20Fe!5e0!3m2!1ses!2sar!4v1714496229158!5m2!1ses!2sar"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center"
+            style="display: flex; flex-direction: column; align-items: center;">
+            <div class="navbar-brand" style="margin-bottom: 2rem;">
+                <h1>LAMBERTUCCI</h1>
+                <span>Compra & Venta</span>
+            </div>
+            <p>&copy; 2026 LAMBERTUCCI. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="js/global.js"></script>
+</body>
+
+</html>

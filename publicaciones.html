@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Publicaciones - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/publicaciones.css">
+</head>
+
+<body>
+
+    <!-- Navbar Minimalista Estilo Lambertucci -->
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand" style="flex-direction: column; display: flex;">
+                <h1 style="margin:0;">LAMBERTUCCI</h1>
+                <span style="font-size: 0.7rem; color: var(--color-secondary); letter-spacing: 2px;">Compra &
+                    Venta</span>
+            </a>
+            <!-- Botón de Hamburguesa para Móviles -->
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item active">Catálogo</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
+                    Vender</a></li>
+            <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Quiero Vender</a>
+        </div>
+    </nav>
+
+    <main class="page-container container section-padding">
+
+        <!-- Sidebar de Filtros -->
+        <aside class="sidebar-filters">
+            <div class="filter-group">
+                <h3>Buscar</h3>
+                <div class="search-input">
+                    <i class='bx bx-search'></i>
+                    <input type="text" placeholder="Ej: Celular samsung..." id="filter-search">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Categorías</h3>
+                <ul class="filter-list" id="category-list">
+                    <li>
+                        <label class="custom-radio">
+                            <input type="radio" name="category" value="all" checked>
+                            <span class="radio-mark"></span>
+                            Todas
+                        </label>
+                    </li>
+                    <!-- Se inyectaran JS -->
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Estado</h3>
+                <ul class="filter-list">
+                    <li>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="nuevo" checked>
+                            <span class="check-mark"></span>
+                            Nuevo
+                        </label>
+                    </li>
+                    <li>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="usado" checked>
+                            <span class="check-mark"></span>
+                            Usado
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Precio</h3>
+                <div class="price-range">
+                    <input type="number" placeholder="Mínimo">
+                    <span>-</span>
+                    <input type="number" placeholder="Máximo">
+                </div>
+                <button class="btn btn-outline btn-block mt-2">Aplicar</button>
+            </div>
+        </aside>
+
+        <!-- Galería de Productos -->
+        <section class="products-content">
+            <div class="products-header">
+                <h2>Resultados <span class="results-count">(0)</span></h2>
+                <div class="header-actions">
+                    <button id="toggle-filters-btn" class="btn btn-outline mobile-filters-btn">
+                        <i class='bx bx-filter'></i> Filtros
+                    </button>
+                    <div class="sort-by">
+                        <label>Ordenar por:</label>
+                        <select>
+                            <option>Más recientes</option>
+                            <option>Menor precio</option>
+                            <option>Mayor precio</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-grid" id="productos-galeria">
+                <!-- Se inyectaran JS -->
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination">
+                <button class="btn btn-outline" disabled><i class='bx bx-chevron-left'></i> Anterior</button>
+                <div class="page-numbers">
+                    <span class="active">1</span>
+                    <span>2</span>
+                    <span>3</span>
+                </div>
+                <button class="btn btn-outline">Siguiente <i class='bx bx-chevron-right'></i></button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center"
+            style="display: flex; flex-direction: column; align-items: center;">
+            <div class="navbar-brand" style="margin-bottom: 2rem;">
+                <h1>LAMBERTUCCI</h1>
+                <span>Compra & Venta</span>
+            </div>
+            <p>&copy; 2026 LAMBERTUCCI. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="js/global.js"></script>
+    <script src="js/publicaciones.js"></script>
+</body>
+
+</html>

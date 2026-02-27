@@ -1,0 +1,15 @@
+# Dependencias
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Entorno (Secretos - ¡Crucial que esto NO se suba a GitHub!)
+.env
+.env.local
+
+# Archivos del Sistema
+.DS_Store
+Thumbs.db

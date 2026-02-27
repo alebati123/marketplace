@@ -1,0 +1,230 @@
+/* producto.css */
+
+.breadcrumb {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: var(--color-primary);
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.product-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* Galería */
+.product-gallery {
+    background: var(--color-surface);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+}
+
+.main-image {
+    width: 100%;
+    height: 500px;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: #f8fafc;
+}
+
+.main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Para que la imagen entera se vea (es un producto) */
+}
+
+.thumbnail-list {
+    display: flex;
+    gap: 1rem;
+}
+
+.thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.6;
+    transition: all var(--transition-fast);
+}
+
+.thumb:hover {
+    opacity: 1;
+}
+
+.thumb.active {
+    opacity: 1;
+    border-color: var(--color-primary);
+}
+
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Info lateral */
+.pub-date {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin: 1rem 0;
+}
+
+.product-details .product-title {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-details .product-price {
+    font-size: 2.5rem;
+    color: var(--color-text-main);
+    margin-bottom: 2rem;
+}
+
+/* Tarjeta de Vendedor / CTA */
+.seller-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.seller-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.seller-info .avatar {
+    width: 50px;
+    height: 50px;
+    background: #EEF2FF;
+    color: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.seller-info h4 {
+    font-size: 1.1rem;
+    color: var(--color-text-main);
+}
+
+.seller-info p {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    /* Verde oficial WP */
+    color: white;
+    font-size: 1.1rem;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1EBE5C;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+}
+
+.btn-whatsapp i {
+    font-size: 1.5rem;
+}
+
+.security-tip {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.security-tip i {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    margin-top: 0.1rem;
+}
+
+/* Descripción */
+.product-description {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.product-description h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.product-description p {
+    color: var(--color-text-muted);
+    white-space: pre-line;
+    /* respeta los saltos de linea en HTML */
+}
+
+/* Meta Data */
+.product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.meta-item {
+    background: var(--color-surface);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+}
+
+.meta-value {
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .main-image {
+        height: 350px;
+    }
+}

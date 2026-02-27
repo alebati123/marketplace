@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Dell XPS 15 - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/producto.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="inicio.html" class="navbar-brand">
+            <h1>LAMBERTUCCI</h1>
+            <span>Compra & Venta</span>
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
+                    Vender</a></li>
+            <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Quiero Vender</a>
+        </div>
+    </nav>
+
+    <main class="container section-padding">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" id="product-breadcrumb">
+            <a href="inicio.html">Inicio</a> &gt;
+            <a href="publicaciones.html" id="bread-cat">Cargando...</a> &gt;
+            <span id="bread-title">Cargando...</span>
+        </div>
+
+        <div class="product-layout">
+            <!-- Galería de Fotos -->
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img src="https://via.placeholder.com/800x600?text=Cargando+Imagen" alt="Producto principal"
+                        id="main-img">
+                </div>
+                <!-- Miniaturas (Próximamente dinámicas) -->
+                <div class="thumbnail-list" id="thumb-list">
+                    <!-- Se inyectaran si hay multiples fotos -->
+                </div>
+            </div>
+
+            <!-- Información del Producto y Vendedor -->
+            <div class="product-details">
+                <span class="badge condition new" id="prod-badge">...</span>
+                <span class="pub-date" id="prod-date">Cargando fecha...</span>
+
+                <h1 class="product-title" id="prod-title">Cargando Título...</h1>
+                <div class="product-price" id="prod-price">$-.--</div>
+
+                <!-- Vendedor Card -->
+                <div class="seller-card">
+                    <div class="seller-info">
+                        <div class="avatar"><i class='bx bx-user'></i></div>
+                        <div>
+                            <h4 id="seller-name">Cargando vendedor...</h4>
+                            <p><i class='bx bx-map'></i> Ubicación no definida</p>
+                        </div>
+                    </div>
+                    <!-- Boton de WP -->
+                    <a href="#" target="_blank" class="btn btn-whatsapp btn-block" id="btn-whatsapp">
+                        <i class='bx bxl-whatsapp'></i> Contactar por WhatsApp
+                    </a>
+                    <p class="security-tip"><i class='bx bx-check-shield'></i> Acuerda el pago y entrega directamente
+                        con el vendedor.</p>
+                </div>
+
+                <!-- Descripción -->
+                <div class="product-description">
+                    <h3>Descripción</h3>
+                    <p id="prod-desc">
+                        Cargando descripción detallada...
+                    </p>
+                </div>
+
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Categoría</span>
+                        <span class="meta-value" id="meta-cat">...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content text-center"
+            style="display: flex; flex-direction: column; align-items: center;">
+            <div class="navbar-brand" style="margin-bottom: 2rem;">
+                <h1>LAMBERTUCCI</h1>
+                <span>Compra & Venta</span>
+            </div>
+            <p>&copy; 2026 LAMBERTUCCI. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="js/global.js"></script>
+    <script src="js/producto.js"></script>
+</body>
+
+</html>

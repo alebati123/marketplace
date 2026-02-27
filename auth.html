@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar / Registrarse - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <!-- Navbar Minimalista Estilo Lambertucci -->
+    <nav class="navbar auth-navbar">
+        <a href="inicio.html" class="navbar-brand">
+            <h1>LAMBERTUCCI</h1>
+            <span>Compra & Venta</span>
+        </a>
+    </nav>
+
+    <main class="auth-main">
+        <div class="auth-container">
+
+            <!-- Panel decorativo izquierdo -->
+            <div class="auth-banner">
+                <div class="banner-content">
+                    <h2>Bienvenido de nuevo</h2>
+                    <p>Únete a la comunidad de MarketPlace. Compra y vende de forma segura y directa.</p>
+                </div>
+                <!-- Gráfico o ilustración -->
+                <div class="banner-graphic">
+                    <i class='bx bxs-shopping-bags'></i>
+                </div>
+            </div>
+
+            <!-- Formularios -->
+            <div class="auth-forms">
+
+                <!-- Toggle Form Buttons -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-target="login">Iniciar Sesión</button>
+                    <button class="auth-tab" data-target="register">Crear Cuenta</button>
+                </div>
+
+                <!-- Formulario de Login -->
+                <form id="login-form" class="auth-form active">
+                    <h3>Inicia Sesión</h3>
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <div class="input-container">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="login-email" placeholder="tu@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pass">Contraseña</label>
+                        <div class="input-container">
+                            <i class='bx bx-lock-alt'></i>
+                            <input type="password" id="login-pass" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox"> Recordarme
+                        </label>
+                        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                </form>
+
+                <!-- Formulario de Registro (oculto por defecto) -->
+                <form id="register-form" class="auth-form hidden">
+                    <h3>Crea tu Cuenta</h3>
+                    <div class="form-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <div class="input-container">
+                            <i class='bx bx-user'></i>
+                            <input type="text" id="reg-name" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <div class="input-container">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="reg-email" placeholder="tu@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-phone">Teléfono (WhatsApp)</label>
+                        <div class="input-container">
+                            <i class='bx bxl-whatsapp'></i>
+                            <input type="tel" id="reg-phone" placeholder="+54 9 11 1234 5678" required>
+                        </div>
+                        <small>El número usado para contactarte.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-pass">Contraseña</label>
+                        <div class="input-container">
+                            <i class='bx bx-lock-alt'></i>
+                            <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" required>
+                        </div>
+                    </div>
+
+                    <div class="form-options terms-checkbox-container"
+                        style="margin-top: 1rem; margin-bottom: 1.5rem; justify-content: flex-start;">
+                        <label class="checkbox-container" style="font-size: 0.9rem;">
+                            <input type="checkbox" id="reg-terms" required> Acepto los <a href="terminos.html"
+                                target="_blank"
+                                style="color: var(--color-primary); text-decoration: underline; margin-left: 0.3rem;">Términos
+                                y Condiciones</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Registrarse <i
+                            class='bx bx-right-arrow-alt'></i></button>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="js/global.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - MarketPlace</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+    <!-- Admin Layout -->
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <h2><i class='bx bx-shield-quarter'></i> Admin<span>Panel</span></h2>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class='bx bx-grid-alt'></i> Dashboard</a></li>
+                <li><a href="#"><i class='bx bx-package'></i> Publicaciones</a></li>
+                <li><a href="#"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li><a href="#"><i class='bx bx-category'></i> Categorías</a></li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="inicio.html"
+                    onclick="localStorage.removeItem('user_token'); localStorage.removeItem('user_data'); localStorage.removeItem('user_name');"><i
+                        class='bx bx-log-out'></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Topbar -->
+            <header class="admin-topbar">
+                <div class="toggle-menu" id="toggle-sidebar">
+                    <i class='bx bx-menu'></i>
+                </div>
+                <div class="topbar-right" style="display: flex; align-items: center; gap: 1rem;">
+                    <a href="inicio.html" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.9rem;"><i
+                            class='bx bx-store-alt'></i> Volver al Inicio</a>
+                    <div class="admin-profile">
+                        <div class="avatar"><i class='bx bx-user'></i></div>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="admin-content">
+                <h1 class="page-title">Bienvenido, Administrador</h1>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon bg-primary-light"><i class='bx bx-package'></i></div>
+                        <div class="info">
+                            <h3 id="stat-productos">0</h3>
+                            <p>Publicaciones Activas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon bg-success-light"><i class='bx bx-user-check'></i></div>
+                        <div class="info">
+                            <h3 id="stat-usuarios">0</h3>
+                            <p>Usuarios Registrados</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categorías Table -->
+                <div class="dashboard-tables">
+                    <div class="table-card" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h2>Gestión de Categorías</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-actions"
+                                style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                                <input type="text" id="search-cat" placeholder="Buscar categoría..."
+                                    class="form-control"
+                                    style="max-width: 300px; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                            </div>
+                            <form id="form-category"
+                                style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                                <input type="text" id="cat-name" placeholder="Nombre (Ej: Indumentaria)" required
+                                    style="padding: 0.5rem; flex: 1; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                                <input type="text" id="cat-slug" placeholder="Slug (Ej: indumentaria)" required
+                                    style="padding: 0.5rem; flex: 1; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                                <button type="submit" class="btn btn-primary"
+                                    style="padding: 0.5rem 1rem;">Añadir</button>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Slug</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categorias-tbody">
+                                        <tr>
+                                            <td colspan="4" style="text-align: center;">Cargando...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="table-card" id="card-products">
+                        <div class="card-header"
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <h2>Moderación de Publicaciones</h2>
+                            <input type="text" id="search-prod" placeholder="Buscar por título o vendedor..."
+                                class="form-control"
+                                style="max-width: 300px; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>IMG</th>
+                                        <th>Título</th>
+                                        <th>Vendedor</th>
+                                        <th>Precio</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productos-tbody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="table-card" id="card-users" style="display: none; margin-top: 2rem;">
+                        <div class="card-header"
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <h2>Lista de Usuarios</h2>
+                            <input type="text" id="search-usr" placeholder="Buscar por nombre o email..."
+                                class="form-control"
+                                style="max-width: 300px; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Rol</th>
+                                        <th>Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuarios-tbody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script simple de Toggle -->
+    <script>
+        document.getElementById('toggle-sidebar').addEventListener('click', function () {
+            document.getElementById('admin-sidebar').classList.toggle('active');
+        });
+    </script>
+    <script src="js/global.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

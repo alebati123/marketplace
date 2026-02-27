@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace - Compra y Venta Segura</title>
+    <!-- Boxicons para Iconos modernos -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+
+<body>
+
+    <!-- Navbar Minimalista Estilo Lambertucci -->
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand" style="flex-direction: column; display: flex;">
+                <h1 style="margin:0;">LAMBERTUCCI</h1>
+                <span style="font-size: 0.7rem; color: var(--color-secondary); letter-spacing: 2px;">Compra &
+                    Venta</span>
+            </a>
+            <!-- Botón de Hamburguesa para Móviles -->
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item active">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
+                    Vender</a></li>
+            <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Quiero Vender</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section Estilo Lambertucci -->
+        <section class="hero-lambertucci">
+            <div class="container hero-container-lambertucci text-center">
+                <div class="hero-content" style="max-width: 800px; margin: 0 auto;">
+                    <span class="hero-subtitle-main">BIENVENIDOS A</span>
+                    <h1 class="hero-title-main" style="margin-bottom: 0.5rem;">LAMBERTUCCI</h1>
+                    <p class="hero-desc" style="margin-top: 1.5rem;">Antigüedades, artículos seleccionados y
+                        oportunidades únicas. Compra y vende en la mejor comunidad.</p>
+
+                    <div class="search-bar-centered" style="margin-top: 2.5rem;">
+                        <div class="search-bar"
+                            style="display: flex; gap: 0.5rem; background: var(--color-surface); padding: 0.5rem; border-radius: 50px; box-shadow: var(--shadow-md);">
+                            <i class='bx bx-search'
+                                style="font-size: 1.8rem; color: var(--color-text-muted); padding-left: 1rem; align-self: center;"></i>
+                            <input type="text" placeholder="¿Qué estás buscando?"
+                                style="flex: 1; border: none; outline: none; background: transparent; font-size: 1rem; color: var(--color-text-main);">
+                            <button class="btn btn-primary"
+                                style="border-radius: 40px; padding: 0.8rem 2.5rem;">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías Populares -->
+        <section class="categories container section-padding text-center">
+            <div class="section-header-centered">
+                <h2>Categorías</h2>
+            </div>
+            <div class="category-grid" id="categorias-grid">
+                <!-- Se inyectaran JS -->
+                <p style="grid-column: 1/-1;">Cargando categorías...</p>
+            </div>
+        </section>
+
+        <!-- Artículos Destacados -->
+        <section class="featured-products container section-padding">
+            <div class="section-header">
+                <h2>Recién Publicados</h2>
+                <a href="publicaciones.html">Ver todos <i class='bx bx-right-arrow-alt'></i></a>
+            </div>
+            <div class="product-grid" id="productos-destacados">
+                <!-- Se inyectaran JS -->
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container cta-container">
+                <h2>¿Tienes algo que ya no usas?</h2>
+                <p>Publica tu artículo en minutos y encuentra miles de compradores cerca de ti. ¡Es rápido, seguro y
+                    gratis!</p>
+                <a href="crear-publicacion.html" class="btn btn-primary btn-lg">Comenzar a Vender Ahora</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3
+                    style="color: var(--color-primary); font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class='bx bx-store-alt'></i> MarketPlace
+                </h3>
+                <p>Tu plataforma de compra y venta de confianza. Conéctate con personas de tu ciudad para hacer grandes
+                    negocios.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="inicio.html">Inicio</a></li>
+                    <li><a href="publicaciones.html">Explorar Artículos</a></li>
+                    <li><a href="nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="auth.html">Registrarse/Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contacto</h3>
+                <p><i class='bx bx-envelope'></i> <a href="mailto:soporte@marketplace.com">soporte@marketplace.com</a>
+                </p>
+                <p><i class='bx bxl-whatsapp'></i> <a href="https://wa.me/5493464682923" target="_blank">3464682923</a>
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MarketPlace. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/global.js"></script>
+    <script src="js/inicio.js"></script>
+</body>
+
+</html>

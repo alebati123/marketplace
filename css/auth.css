@@ -1,0 +1,250 @@
+/* Estilos de Autenticación */
+
+.auth-navbar {
+    border-bottom: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.auth-main {
+    min-height: calc(100vh - 80px);
+    /* Restando navbar approx */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: var(--color-background);
+}
+
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-surface);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+}
+
+/* Banner Izquierdo */
+.auth-banner {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-content h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+}
+
+.banner-graphic {
+    position: absolute;
+    bottom: -50px;
+    right: -20px;
+    font-size: 18rem;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+    z-index: 1;
+}
+
+/* Zona de Formularios */
+.auth-forms {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--color-border);
+    margin-bottom: 2rem;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    /* para sobreponer la linea */
+    transition: all var(--transition-fast);
+}
+
+.auth-tab:hover {
+    color: var(--color-primary);
+}
+
+.auth-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Form Styles */
+.auth-form {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-form h3 {
+    font-size: 1.5rem;
+    color: var(--color-text-main);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin-bottom: 0.5rem;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-container i {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text-main);
+    background-color: var(--color-background);
+    transition: all var(--transition-fast);
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background-color: var(--color-surface);
+}
+
+.input-container input:focus+i,
+.input-container input:not(:placeholder-shown)+i {
+    color: var(--color-primary);
+}
+
+.form-group small {
+    display: block;
+    color: var(--color-text-muted);
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1.05rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsividad */
+@media (max-width: 900px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 80vh;
+    }
+
+    .auth-banner {
+        display: none;
+        /* Ocultamos el banner en moviles para dar mas espacio */
+    }
+
+    .auth-forms {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-main {
+        padding: 1rem;
+    }
+
+    .auth-forms {
+        padding: 1.5rem;
+    }
+}
