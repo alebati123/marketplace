@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = document.getElementById('categoria');
     const loadCategories = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/categories');
+            const res = await fetch('/api/categories');
             const categories = await res.json();
 
             categorySelect.innerHTML = '<option value="" disabled selected>Selecciona una...</option>';
@@ -88,6 +88,75 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     loadCategories();
 
+    // Lógica para mostrar/ocultar input de ubicación personalizada
+    const locationRadios = document.querySelectorAll('input[name="location_type"]');
+    const locationCustomInput = document.getElementById('location_custom');
+
+    locationRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'personalizado') {
+                locationCustomInput.style.display = 'block';
+                locationCustomInput.required = true;
+            } else {
+                locationCustomInput.style.display = 'none';
+                locationCustomInput.required = false;
+            }
+        });
+    });
+
+    // Lógica para toggle "Producto" vs "Servicio"
+    const radioPubType = document.querySelectorAll('input[name="pub_type"]');
+    const grpCategoria = document.getElementById('grp-categoria');
+    const grpEstado = document.getElementById('grp-estado');
+    const inputCategoria = document.getElementById('categoria');
+    const inputEstado = document.getElementById('estado');
+    const inputTitulo = document.getElementById('titulo');
+    const headerTitle = document.querySelector('.create-header h1');
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    const locHeader = document.getElementById('loc-header');
+    const locRadio1 = document.getElementById('loc-radio-1');
+    const locRadio2 = document.getElementById('loc-radio-2');
+    const locCustom = document.getElementById('location_custom');
+    const descHeader = document.getElementById('desc-header');
+    const inputDesc = document.getElementById('descripcion');
+
+    radioPubType.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'servicio') {
+                grpCategoria.style.display = 'none';
+                grpEstado.style.display = 'none';
+                inputCategoria.required = false;
+                inputEstado.required = false;
+                if (inputTitulo) inputTitulo.placeholder = "Ej: Pintor, Albañilería, Flete";
+                if (headerTitle) headerTitle.innerHTML = "Publicar un Servicio";
+                if (submitBtn) submitBtn.innerHTML = "<i class='bx bx-check-circle'></i> Publicar Servicio Ahora";
+
+                if (locHeader) locHeader.innerHTML = "Zonas de Cobertura / Atención *";
+                if (locRadio1) locRadio1.innerHTML = "Solo de forma Remota / Online";
+                if (locRadio2) locRadio2.innerHTML = "A domicilio en zonas específicas";
+                if (locCustom) locCustom.placeholder = "Ej: Capital Federal, Mar del Plata y alrededores...";
+                if (descHeader) descHeader.innerHTML = "Detalles del Servicio *";
+                if (inputDesc) inputDesc.placeholder = "Describe tu experiencia, los trabajos que realizas, horarios de atención, etc.";
+            } else {
+                grpCategoria.style.display = 'block';
+                grpEstado.style.display = 'block';
+                inputCategoria.required = true;
+                inputEstado.required = true;
+                if (inputTitulo) inputTitulo.placeholder = "Ej: PlayStation 5 con 2 controles";
+                if (headerTitle) headerTitle.innerHTML = "Publicar un Artículo";
+                if (submitBtn) submitBtn.innerHTML = "<i class='bx bx-check-circle'></i> Publicar Artículo Ahora";
+
+                if (locHeader) locHeader.innerHTML = "Ubicación de Entrega *";
+                if (locRadio1) locRadio1.innerHTML = "Punto de encuentro a acordar";
+                if (locRadio2) locRadio2.innerHTML = "Dirección / Barrio específico";
+                if (locCustom) locCustom.placeholder = "Ej: Palermo Soho, cerca de Plaza Italia";
+                if (descHeader) descHeader.innerHTML = "Descripción *";
+                if (inputDesc) inputDesc.placeholder = "Describe los detalles, tiempo de uso, si tiene accesorios, etc.";
+            }
+        });
+    });
+
     // Enviar formulario al backend
     const formCrear = document.getElementById('form-crear');
 
@@ -101,40 +170,72 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Obtener datos del formulario
+        const pub_type = document.querySelector('input[name="pub_type"]:checked').value;
         const title = document.getElementById('titulo').value;
-        const category_id = parseInt(categorySelect.value); // Obtenemos el ID numérico directamente
 
-        const condition_status = document.getElementById('estado').value;
+        // Si es servicio, forzamos la busqueda del ID de categoria "Servicios" en el DOM
+        let category_id;
+        let condition_status;
+
+        if (pub_type === 'servicio') {
+            const servicioOption = Array.from(categorySelect.options).find(opt => opt.text.trim().toLowerCase().includes('servicio'));
+            if (!servicioOption) {
+                alert("Error crítico: No se encontró la categoría 'Servicios' en la Base de Datos. Contacta al soporte.");
+                return;
+            }
+            category_id = parseInt(servicioOption.value);
+            condition_status = 'nuevo'; // Los servicios no tienen "desgaste físico", se mapea como 'nuevo' por default
+        } else {
+            category_id = parseInt(categorySelect.value);
+            condition_status = document.getElementById('estado').value;
+        }
+
         const price = document.getElementById('precio').value;
         const description = document.getElementById('descripcion').value;
 
-        // Subir Imagen (si hay alguna)
+        // Nuevos campos de ubicación
+        const location_type = document.querySelector('input[name="location_type"]:checked').value;
+        const location_custom = location_type === 'personalizado' ? document.getElementById('location_custom').value : null;
+
+        // Subir Imagen(es)
         let image_url = null;
+        let additional_images = null;
+
         if (fileInput.files.length > 0) {
             const formData = new FormData();
-            formData.append('image', fileInput.files[0]); // Solo primera foto por ahora
+            // Limita a 5 por seguridad front
+            const filesToUpload = Array.from(fileInput.files).slice(0, 5);
+            filesToUpload.forEach(file => {
+                formData.append('images', file);
+            });
 
             try {
                 // Mostrar estado de carga (opcional visual)
                 const submitBtn = formCrear.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = "<i class='bx bx-loader bx-spin'></i> Subiendo imagen...";
+                submitBtn.innerHTML = "<i class='bx bx-loader bx-spin'></i> Subiendo imágenes...";
                 submitBtn.disabled = true;
 
-                const uploadRes = await fetch('http://127.0.0.1:3000/api/media/imagen', {
+                const uploadRes = await fetch('/api/media/imagen', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` },
+                    // No seteamos Content-Type, fetch lo pone solo con FormData
                     body: formData
                 });
 
                 if (uploadRes.ok) {
                     const uploadData = await uploadRes.json();
-                    image_url = uploadData.url;
+
+                    if (uploadData.urls && uploadData.urls.length > 0) {
+                        image_url = uploadData.urls[0]; // La primera es la principal
+                        if (uploadData.urls.length > 1) {
+                            additional_images = JSON.stringify(uploadData.urls.slice(1)); // El resto son extra
+                        }
+                    }
                 } else {
                     const errorText = await uploadRes.text();
                     console.error("Error backend imagen:", errorText);
-                    alert('Error subiendo imagen. Verifica Cloudinary. Usando imagen nula.');
+                    alert('Error subiendo imágenes. Verifica Cloudinary. Usando imagen nula.');
                 }
             } catch (err) {
                 console.error("Error fetch imagen:", err);
@@ -149,14 +250,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Enviar publicación a backend
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/products', {
+            const res = await fetch('/api/products', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    title, category_id, description, price, condition_status, image_url
+                    title, category_id, description, price, condition_status, image_url, additional_images, location_type, location_custom
                 })
             });
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorar Publicaciones - MarketPlace</title>
+    <title>Explorar Servicios Profesionales - MarketPlace</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/publicaciones.css">
@@ -28,8 +28,8 @@
         </div>
         <ul class="navbar-nav">
             <li><a href="inicio.html" class="nav-item">Inicio</a></li>
-            <li><a href="publicaciones.html" class="nav-item active">Catálogo</a></li>
-            <li><a href="servicios.html" class="nav-item">Servicios</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li><a href="servicios.html" class="nav-item active">Servicios</a></li>
             <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Publicar</a></li>
             <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
         </ul>
@@ -53,39 +53,7 @@
                 </div>
             </div>
 
-            <div class="filter-group">
-                <h3>Categorías</h3>
-                <ul class="filter-list" id="category-list">
-                    <li>
-                        <label class="custom-radio">
-                            <input type="radio" name="category" value="all" checked>
-                            <span class="radio-mark"></span>
-                            Todas
-                        </label>
-                    </li>
-                    <!-- Se inyectaran JS -->
-                </ul>
-            </div>
-
-            <div class="filter-group">
-                <h3>Estado</h3>
-                <ul class="filter-list">
-                    <li>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" value="nuevo" checked>
-                            <span class="check-mark"></span>
-                            Nuevo
-                        </label>
-                    </li>
-                    <li>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" value="usado" checked>
-                            <span class="check-mark"></span>
-                            Usado
-                        </label>
-                    </li>
-                </ul>
-            </div>
+            <!-- Los filtros de Categorías y Estado fueron removidos porque todos los ítems aquí son "Servicios" -->
 
             <div class="filter-group">
                 <h3>Precio</h3>
@@ -138,7 +106,7 @@
         </div>
     </footer>
     <script src="js/global.js"></script>
-    <script src="js/publicaciones.js"></script>
+    <script src="js/servicios.js"></script>
 </body>
 
 </html>

@@ -199,7 +199,30 @@
     }
 
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+    }
+
+    .hero-subtitle-main {
+        font-size: 0.8rem;
+        letter-spacing: 4px;
+        margin-bottom: 1rem;
+    }
+
+    .search-bar {
+        flex-direction: column;
+        border-radius: 15px !important;
+        padding: 1rem !important;
+    }
+
+    .search-bar input {
+        text-align: center;
+        padding: 0.5rem;
+    }
+
+    .search-bar button {
+        width: 100%;
+        border-radius: 10px !important;
     }
 
     .section-header flex {

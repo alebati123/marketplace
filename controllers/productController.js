@@ -5,7 +5,7 @@ exports.getAll = async (req, res) => {
     try {
         const { search, category, condition, sort, min_price, max_price } = req.query;
         let queryStr = `
-            SELECT p.*, c.name as category_name, u.name as seller_name, u.phone as seller_phone
+            SELECT p.*, c.name as category_name, u.name as seller_name, u.phone as seller_phone, u.location as user_location
             FROM products p
             JOIN categories c ON p.category_id = c.id
             JOIN users u ON p.user_id = u.id
@@ -67,7 +67,9 @@ exports.getById = async (req, res) => {
             .input('id', sql.Int, id)
             .query(`
                 SELECT p.*, c.name as category_name, c.slug as category_slug, 
-                       u.name as seller_name, u.phone as seller_phone 
+                       u.name as seller_name, u.phone as seller_phone, u.location as user_location,
+                       (SELECT CAST(ROUND(AVG(CAST(rating AS FLOAT)), 1) AS DECIMAL(2,1)) FROM user_reviews WHERE rated_user_id = u.id) as seller_rating,
+                       (SELECT COUNT(*) FROM user_reviews WHERE rated_user_id = u.id) as seller_reviews_count
                 FROM products p
                 JOIN categories c ON p.category_id = c.id
                 JOIN users u ON p.user_id = u.id
@@ -88,7 +90,7 @@ exports.getById = async (req, res) => {
 // Crear nueva publicación
 exports.create = async (req, res) => {
     try {
-        const { title, category_id, description, price, condition_status, image_url } = req.body;
+        const { title, category_id, description, price, condition_status, image_url, additional_images, location_type, location_custom } = req.body;
         const user_id = req.user.id; // Viene del token JWT
 
         if (!title || !category_id || !description || !price || !condition_status) {
@@ -104,11 +106,14 @@ exports.create = async (req, res) => {
             .input('price', sql.Decimal(10, 2), price)
             .input('condition_status', sql.NVarChar, condition_status)
             .input('image_url', sql.NVarChar, image_url || null)
+            .input('additional_images', sql.NVarChar, additional_images || null)
+            .input('location_type', sql.NVarChar, location_type || 'acordado')
+            .input('location_custom', sql.NVarChar, location_custom || null)
             .query(`
                 INSERT INTO products 
-                (user_id, category_id, title, description, price, condition_status, image_url, status) 
+                (user_id, category_id, title, description, price, condition_status, image_url, additional_images, status, location_type, location_custom) 
                 OUTPUT inserted.id
-                VALUES (@user_id, @category_id, @title, @description, @price, @condition_status, @image_url, 'activo')
+                VALUES (@user_id, @category_id, @title, @description, @price, @condition_status, @image_url, @additional_images, 'activo', @location_type, @location_custom)
             `);
 
         res.status(201).json({
@@ -130,7 +135,7 @@ exports.getByCategory = async (req, res) => {
         const result = await pool.request()
             .input('slug', sql.NVarChar, slug)
             .query(`
-                SELECT p.*, c.name as category_name, u.name as seller_name 
+                SELECT p.*, c.name as category_name, u.name as seller_name, u.location as user_location 
                 FROM products p
                 JOIN categories c ON p.category_id = c.id
                 JOIN users u ON p.user_id = u.id
@@ -170,7 +175,7 @@ exports.getMine = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, price, description } = req.body;
+        const { title, price, description, location_type, location_custom } = req.body;
         const user_id = req.user.id;
         const role = req.user.role;
 
@@ -189,7 +194,17 @@ exports.update = async (req, res) => {
             .input('title', sql.NVarChar, title || null)
             .input('price', sql.Decimal(10, 2), price)
             .input('description', sql.NVarChar, description)
-            .query('UPDATE products SET title = COALESCE(@title, title), price = @price, description = @description WHERE id = @id');
+            .input('location_type', sql.NVarChar, location_type || null)
+            .input('location_custom', sql.NVarChar, location_custom || null)
+            .query(`
+                UPDATE products 
+                SET title = COALESCE(@title, title), 
+                    price = @price, 
+                    description = @description,
+                    location_type = COALESCE(@location_type, location_type),
+                    location_custom = @location_custom
+                WHERE id = @id
+            `);
 
         res.json({ message: 'Publicación actualizada correctamente' });
     } catch (error) {
@@ -224,5 +239,31 @@ exports.delete = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al eliminar publicación' });
+    }
+};
+
+// Obtener otras publicaciones del mismo vendedor (hasta 4)
+exports.getMoreFromUser = async (req, res) => {
+    try {
+        const { userId, currentProductId } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('user_id', sql.Int, userId)
+            .input('current_id', sql.Int, currentProductId)
+            .query(`
+                SELECT TOP 4 p.id, p.title, p.price, p.image_url, p.condition_status, c.name as category_name
+                FROM products p
+                JOIN categories c ON p.category_id = c.id
+                WHERE p.user_id = @user_id 
+                  AND p.id != @current_id 
+                  AND p.status = 'activo'
+                ORDER BY NEWID() -- Orden aleatorio
+            `);
+
+        res.json(result.recordset);
+    } catch (error) {
+        console.error("Error al obtener más publicaciones:", error);
+        res.status(500).json({ error: 'Hubo un problema al buscar otras publicaciones' });
     }
 };

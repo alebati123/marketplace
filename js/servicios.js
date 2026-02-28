@@ -52,10 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let url = '/api/products';
             const params = new URLSearchParams();
             if (currentFilters.search) params.append('search', currentFilters.search);
-            if (currentFilters.category && currentFilters.category !== 'all') {
-                params.append('category', currentFilters.category);
-            }
-            if (currentFilters.condition) params.append('condition', currentFilters.condition);
+            // Forza siempre a buscar bajo la manta de 'servicios'
+            params.append('category', 'servicios');
+
             if (currentFilters.sort) params.append('sort', currentFilters.sort);
             if (currentFilters.min_price) params.append('min_price', currentFilters.min_price);
             if (currentFilters.max_price) params.append('max_price', currentFilters.max_price);
@@ -66,9 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             if (res.ok) {
-                // Filtramos duro para que nunca muestre servicios en el Catalogo Normal
-                const soloProductos = data.filter(p => p.category_slug !== 'servicios');
-                renderProducts(soloProductos);
+                renderProducts(data);
             } else {
                 console.error('Error fetching products', data);
                 gallery.innerHTML = '<p>Error al cargar el catálogo.</p>';
@@ -112,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'product-card';
             card.innerHTML = `
                 <div class="product-img">
-                    <span class="badge condition ${conditionClass}">${conditionLabel}</span>
                     <img src="${imageUrl}" alt="${p.title}">
                 </div>
                 <div class="product-info">
@@ -130,73 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Actualizar filtros desde DOM
     const applyFilters = () => {
-        currentFilters.search = searchInput.value.trim();
-
-        // Categoria
-        const checkedCat = document.querySelector('input[name="category"]:checked');
-        currentFilters.category = checkedCat ? checkedCat.value : 'all';
+        currentFilters.search = searchInput ? searchInput.value.trim() : '';
 
         // Ordenamiento
-        const sortVal = sortSelect.value;
+        const sortVal = sortSelect ? sortSelect.value : '';
         if (sortVal === 'Menor precio') currentFilters.sort = 'price_asc';
         else if (sortVal === 'Mayor precio') currentFilters.sort = 'price_desc';
         else currentFilters.sort = '';
 
-        // Estado
-        currentFilters.condition = '';
-        const checkedConds = Array.from(conditionCheckboxes).filter(cb => cb.checked);
-        if (checkedConds.length === 1) {
-            currentFilters.condition = checkedConds[0].value;
-        }
-
         // Precio
-        currentFilters.min_price = priceMinInput.value || '';
-        currentFilters.max_price = priceMaxInput.value || '';
+        currentFilters.min_price = priceMinInput ? (priceMinInput.value || '') : '';
+        currentFilters.max_price = priceMaxInput ? (priceMaxInput.value || '') : '';
 
         fetchProducts();
     };
 
-    const loadCategoriesAndInit = async () => {
-        try {
-            const res = await fetch('/api/categories');
-            const data = await res.json();
-            if (res.ok && categoryList) {
-                categoryList.innerHTML = `
-                    <li>
-                        <label class="custom-radio">
-                            <input type="radio" name="category" value="all" ${currentFilters.category === 'all' ? 'checked' : ''}>
-                            <span class="radio-mark"></span>
-                            Todas
-                        </label>
-                    </li>
-                `;
-                data.forEach(cat => {
-                    if (cat.slug === 'servicios') return; // Ocultar categoría maestra
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <label class="custom-radio">
-                            <input type="radio" name="category" value="${cat.slug}" ${currentFilters.category === cat.slug ? 'checked' : ''}>
-                            <span class="radio-mark"></span>
-                            ${cat.name}
-                        </label>
-                    `;
-                    categoryList.appendChild(li);
-                });
-            }
-        } catch (e) {
-            console.error('Error cargando categorias', e);
-        }
-
-        // Asignar listeners despues de crear el DOM de categorias
-        categoryRadios = document.querySelectorAll('input[name="category"]');
-        categoryRadios.forEach(radio => radio.addEventListener('change', applyFilters));
-        conditionCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+    const loadCategoriesAndInit = () => {
+        // No cargamos subcategorias dinamicamente por ahora, 
+        // ya que la vista "Servicios" no usa categorias paralelas aun.
         if (sortSelect) sortSelect.addEventListener('change', applyFilters);
         if (btnApplyFilters) btnApplyFilters.addEventListener('click', applyFilters);
 
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') applyFilters();
-        });
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+        }
 
         // Carga inicial
         fetchProducts();

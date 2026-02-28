@@ -29,8 +29,8 @@
         <ul class="navbar-nav">
             <li><a href="inicio.html" class="nav-item">Inicio</a></li>
             <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
-            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
-                    Vender</a></li>
+            <li><a href="servicios.html" class="nav-item">Servicios</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Publicar</a></li>
             <li class="auth-required" style="display: none;"><a href="mis-publicaciones.html"
                     class="nav-item active">Mis Publicaciones</a></li>
         </ul>
@@ -38,7 +38,7 @@
             <!-- Asumiendo usuario logueado en esta demo para maquetación -->
             <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
             <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
-                style="display: none;">Quiero Vender</a>
+                style="display: none;">Publicar</a>
         </div>
     </nav>
 
@@ -80,6 +80,20 @@
                     <label><i class='bx bx-detail'></i> Nueva Descripción</label>
                     <textarea id="edit-desc" class="form-control" rows="5" required
                         placeholder="Añade más detalles, estado, por qué lo vendes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class='bx bx-map-pin'></i> Ubicación de Entrega</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.5rem;">
+                        <label style="font-weight: normal; cursor: pointer;">
+                            <input type="radio" name="edit_location_type" value="acordado" checked> Punto de encuentro a
+                            acordar
+                        </label>
+                        <label style="font-weight: normal; cursor: pointer;">
+                            <input type="radio" name="edit_location_type" value="personalizado"> Dirección específica
+                        </label>
+                    </div>
+                    <input type="text" id="edit-location-custom" class="form-control"
+                        style="margin-top: 0.8rem; display: none;" placeholder="Ej: Caballito">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1rem;"><i
                         class='bx bx-save'></i> Guardar Cambios</button>

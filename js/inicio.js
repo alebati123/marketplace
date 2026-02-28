@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!grid) return;
 
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/categories');
+            const res = await fetch('/api/categories');
             const data = await res.json();
             if (res.ok) {
                 grid.innerHTML = '';
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!grid) return;
 
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/products');
+            const res = await fetch('/api/products');
             const data = await res.json();
 
             if (res.ok) {

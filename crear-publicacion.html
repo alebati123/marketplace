@@ -61,6 +61,25 @@
                 <div class="form-section">
                     <h2><i class='bx bx-text'></i> Información Básica</h2>
 
+                    <div class="form-group"
+                        style="background: var(--color-surface); padding: 1rem; border-radius: var(--border-radius-md); border: 1px solid var(--color-border); margin-bottom: 1.5rem;">
+                        <label
+                            style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 0.8rem; display: block; font-weight: 500;">¿Qué
+                            deseas publicar?</label>
+                        <div style="display: flex; gap: 2rem;">
+                            <label
+                                style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="pub_type" value="producto" id="radio-producto" checked> Un
+                                Producto / Artículo Físico
+                            </label>
+                            <label
+                                style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="pub_type" value="servicio" id="radio-servicio"> Un Servicio
+                                Profesional
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="titulo">Título de la publicación *</label>
                         <input type="text" id="titulo" class="form-control"
@@ -68,13 +87,13 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="form-group">
+                        <div class="form-group" id="grp-categoria">
                             <label for="categoria">Categoría *</label>
                             <select id="categoria" class="form-control" required>
                                 <option value="" disabled selected>Cargando categorías...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="grp-estado">
                             <label for="estado">Estado del producto *</label>
                             <select id="estado" class="form-control" required>
                                 <option value="nuevo">Nuevo</option>
@@ -96,7 +115,28 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="descripcion">Descripción *</label>
+                        <label id="loc-header">Ubicación de Entrega *</label>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.5rem;">
+                            <label
+                                style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="location_type" value="acordado" checked> <span
+                                    id="loc-radio-1">Punto de encuentro a
+                                    acordar</span>
+                            </label>
+                            <label
+                                style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="location_type" value="personalizado"> <span
+                                    id="loc-radio-2">Dirección / Barrio
+                                    específico</span>
+                            </label>
+                        </div>
+                        <input type="text" id="location_custom" class="form-control"
+                            style="margin-top: 0.8rem; display: none;"
+                            placeholder="Ej: Palermo Soho, cerca de Plaza Italia">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion" id="desc-header">Descripción *</label>
                         <textarea id="descripcion" class="form-control" rows="6"
                             placeholder="Describe los detalles, tiempo de uso, si tiene accesorios, etc."
                             required></textarea>

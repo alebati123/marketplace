@@ -156,9 +156,15 @@ exports.getAllUsers = async (req, res) => {
 
         const pool = await poolPromise;
 
-        // Seleccionamos datos básicos de todos los usuarios
+        // Seleccionamos datos básicos de todos los usuarios y su puntaje de Reseñas
         const result = await pool.request()
-            .query('SELECT id, name, email, role, phone, created_at FROM users ORDER BY created_at DESC');
+            .query(`
+                SELECT u.id, u.name, u.email, u.phone, u.role, u.created_at,
+                       (SELECT COUNT(*) FROM user_reviews WHERE rated_user_id = u.id) as total_reviews,
+                       (SELECT CAST(ROUND(AVG(CAST(rating AS FLOAT)), 1) AS DECIMAL(2,1)) FROM user_reviews WHERE rated_user_id = u.id) as average_rating
+                FROM users u 
+                ORDER BY u.created_at DESC
+            `);
 
         res.json(result.recordset);
 

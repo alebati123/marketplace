@@ -14,13 +14,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('close-edit-modal');
     const editForm = document.getElementById('edit-product-form');
 
+    // Lógica para mostrar/ocultar input de ubicación personalizada en el modal
+    const locationRadios = document.querySelectorAll('input[name="edit_location_type"]');
+    const locationCustomInput = document.getElementById('edit-location-custom');
+
+    locationRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'personalizado') {
+                locationCustomInput.style.display = 'block';
+                locationCustomInput.required = true;
+            } else {
+                locationCustomInput.style.display = 'none';
+                locationCustomInput.required = false;
+            }
+        });
+    });
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(price);
     };
 
     const fetchMyProducts = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/products/user/me', {
+            const res = await fetch('/api/products/user/me', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -75,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.title = p.title;
             card.dataset.price = p.price;
             card.dataset.description = p.description;
+            card.dataset.location_type = p.location_type || 'acordado';
+            card.dataset.location_custom = p.location_custom || '';
 
             card.innerHTML = `
                 <div class="product-img">
@@ -105,6 +123,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('edit-price').value = card.dataset.price;
         document.getElementById('edit-desc').value = card.dataset.description;
 
+        // Configurar Ubicación
+        const locType = card.dataset.location_type;
+        const locCustom = card.dataset.location_custom;
+        const locCustomInput = document.getElementById('edit-location-custom');
+
+        document.querySelector(`input[name="edit_location_type"][value="${locType}"]`).checked = true;
+        if (locType === 'personalizado') {
+            locCustomInput.style.display = 'block';
+            locCustomInput.required = true;
+            locCustomInput.value = locCustom;
+        } else {
+            locCustomInput.style.display = 'none';
+            locCustomInput.required = false;
+            locCustomInput.value = '';
+        }
+
         modal.style.display = 'block';
     };
 
@@ -114,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const res = await fetch(`http://127.0.0.1:3000/api/products/${id}`, {
+            const res = await fetch(`/api/products/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -154,14 +188,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPrice = document.getElementById('edit-price').value;
         const newDesc = document.getElementById('edit-desc').value;
 
+        const locType = document.querySelector('input[name="edit_location_type"]:checked').value;
+        const locCustom = locType === 'personalizado' ? document.getElementById('edit-location-custom').value : null;
+
         try {
-            const res = await fetch(`http://127.0.0.1:3000/api/products/${id}`, {
+            const res = await fetch(`/api/products/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ title: newTitle, price: newPrice, description: newDesc })
+                body: JSON.stringify({
+                    title: newTitle,
+                    price: newPrice,
+                    description: newDesc,
+                    location_type: locType,
+                    location_custom: locCustom
+                })
             });
 
             if (res.ok) {

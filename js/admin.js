@@ -261,6 +261,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const date = new Date(u.created_at).toLocaleDateString('es-AR');
             const roleBadge = u.role === 'admin' ? '<span class="badge" style="background:var(--color-primary); color:white; padding:0.2rem 0.5rem; border-radius:5px; font-size:0.8rem;">Admin</span>' : 'Usuario';
 
+            // Computar Reputacion HTML
+            let total = u.total_reviews || 0;
+            let avg = u.average_rating || 0;
+            let starsHtml = '';
+
+            if (total > 0) {
+                let roundedAvg = Math.round(avg);
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= roundedAvg) starsHtml += "<i class='bx bxs-star' style='color:#ffb400; font-size:1.1rem;'></i>";
+                    else starsHtml += "<i class='bx bx-star' style='color:#ccc; font-size:1.1rem;'></i>";
+                }
+                starsHtml += `<br><a href="#" onclick="viewUserReviews('${u.name}')" style="font-size:0.8rem; color:var(--color-primary); text-decoration:underline;">${avg} (${total} Reseñas)</a>`;
+            } else {
+                starsHtml = `<span style="font-size:0.85rem; color:#888;">Sin calificar</span>`;
+            }
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>#${u.id}</td>
@@ -269,9 +285,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${u.phone ? `<a href="https://wa.me/${u.phone.replace(/\D/g, '')}" target="_blank" style="color:#25D366;"><i class='bx bxl-whatsapp'></i> ${u.phone}</a>` : 'No provisto'}</td>
                 <td>${roleBadge}</td>
                 <td>${date}</td>
+                <td style="text-align:center;">${starsHtml}</td>
             `;
             usuariosTbody.appendChild(tr);
         });
+    };
+
+    // Función auxiliar para buscar reseñas rápidamente tocando las estrellas
+    window.viewUserReviews = (userName) => {
+        // Encontraremos la Pestaña "Reseñas" y la emulamos como clic 
+        const tabResenas = Array.from(document.querySelectorAll('.sidebar-menu a')).find(el => el.textContent.trim() === 'Reseñas');
+        if (tabResenas) {
+            tabResenas.click();
+            // Y luego filtramos el search input automáticamente
+            setTimeout(() => {
+                const searchRev = document.getElementById('search-rev');
+                if (searchRev) {
+                    searchRev.value = userName;
+                    // Disparamos el evento input para que filtre visualmente
+                    searchRev.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }, 300);
+        }
     };
 
     if (searchUsr) {
@@ -285,6 +320,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const cardUsers = document.getElementById('card-users');
+
+    // --- FUNCIONES DE RESEÑAS (MODERACIÓN) ---
+    const cardReviews = document.getElementById('card-reviews');
+    const reviewsTbody = document.getElementById('reviews-tbody');
+    const searchRev = document.getElementById('search-rev');
+    let allReviewsData = [];
+
+    const fetchAllReviews = async () => {
+        try {
+            const res = await fetch('http://127.0.0.1:3000/api/users/reviews', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                allReviewsData = data;
+                renderReviews(allReviewsData);
+            }
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
+            if (reviewsTbody) reviewsTbody.innerHTML = '<tr><td colspan="6">Error al cargar reseñas</td></tr>';
+        }
+    };
+
+    const renderReviews = (reviewsList) => {
+        if (!reviewsTbody) return;
+        reviewsTbody.innerHTML = '';
+        if (reviewsList.length === 0) {
+            reviewsTbody.innerHTML = '<tr><td colspan="6">No se encontraron reseñas.</td></tr>';
+            return;
+        }
+
+        reviewsList.forEach(r => {
+            const date = new Date(r.created_at).toLocaleDateString('es-AR');
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= r.rating) starsHtml += "<i class='bx bxs-star' style='color:#ffb400;'></i>";
+                else starsHtml += "<i class='bx bx-star' style='color:#ccc;'></i>";
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${date}</td>
+                <td><strong>${r.reviewer_name}</strong><br><small>${r.reviewer_email}</small></td>
+                <td><strong>${r.rated_user_name}</strong><br><small>${r.rated_user_email}</small></td>
+                <td>${starsHtml}</td>
+                <td><p style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.comment || ''}">${r.comment || '<i>Sin comentario</i>'}</p></td>
+                <td>
+                    <button class="action-btn delete" onclick="deleteReview(${r.id})" title="Eliminar Reseña">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </td>
+            `;
+            reviewsTbody.appendChild(tr);
+        });
+    };
+
+    if (searchRev) {
+        searchRev.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allReviewsData.filter(r =>
+                r.rated_user_name.toLowerCase().includes(term) ||
+                r.reviewer_name.toLowerCase().includes(term) ||
+                (r.comment && r.comment.toLowerCase().includes(term))
+            );
+            renderReviews(filtered);
+        });
+    }
+
+    window.deleteReview = async (id) => {
+        if (!confirm('¿Seguro que deseas borrar esta reseña de forma permanente?')) return;
+        try {
+            const res = await fetch(`http://127.0.0.1:3000/api/users/reviews/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                fetchAllReviews();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Fallo de conexión al eliminar reseña.');
+        }
+    };
 
     // --- LÓGICA DEL MENÚ LATERAL ---
     menuLinks.forEach(link => {
@@ -307,25 +428,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 catCard.style.display = 'block';
                 prodCard.style.display = 'block';
                 if (cardUsers) cardUsers.style.display = 'none';
+                if (cardReviews) cardReviews.style.display = 'none';
             } else if (tabName === 'Publicaciones') {
                 statsGrid.style.display = 'none';
                 catCard.style.display = 'none';
                 prodCard.style.display = 'block';
                 if (cardUsers) cardUsers.style.display = 'none';
+                if (cardReviews) cardReviews.style.display = 'none';
             } else if (tabName === 'Categorías') {
                 statsGrid.style.display = 'none';
                 catCard.style.display = 'block';
                 prodCard.style.display = 'none';
                 if (cardUsers) cardUsers.style.display = 'none';
+                if (cardReviews) cardReviews.style.display = 'none';
             } else if (tabName === 'Usuarios') {
                 statsGrid.style.display = 'grid';
                 catCard.style.display = 'none';
                 prodCard.style.display = 'none';
                 if (cardUsers) cardUsers.style.display = 'block';
+                if (cardReviews) cardReviews.style.display = 'none';
                 fetchAllUsersData();
+            } else if (tabName === 'Reseñas') {
+                statsGrid.style.display = 'grid';
+                catCard.style.display = 'none';
+                prodCard.style.display = 'none';
+                if (cardUsers) cardUsers.style.display = 'none';
+                if (cardReviews) cardReviews.style.display = 'block';
+                fetchAllReviews();
+            }
+
+            // Cerrar menú on mobile después de clickear una pestaña
+            if (window.innerWidth <= 900) {
+                document.getElementById('admin-sidebar').classList.remove('active');
             }
         });
     });
+
+    // Cerrar menú tocando afuera en móviles
+    const adminMain = document.querySelector('.admin-main');
+    if (adminMain) {
+        adminMain.addEventListener('click', () => {
+            if (window.innerWidth <= 900) {
+                document.getElementById('admin-sidebar').classList.remove('active');
+            }
+        });
+    }
 
     // Iniciar Panel
     fetchUsersStat();

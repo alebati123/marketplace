@@ -58,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.reload();
                     }
                 }
+
+                // Lógica para abrir/cerrar el dropdown al hacer click (esencial para celulares)
+                const isDropdownToggle = e.target.closest('#dropdown-toggle');
+                if (isDropdownToggle) {
+                    wrapper.classList.toggle('active');
+                } else if (!e.target.closest('.user-dropdown')) {
+                    // Cerrar si hace click afuera
+                    wrapper.classList.remove('active');
+                }
             });
         }
     } else {

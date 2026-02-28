@@ -25,6 +25,7 @@
                 <li><a href="#" class="active"><i class='bx bx-grid-alt'></i> Dashboard</a></li>
                 <li><a href="#"><i class='bx bx-package'></i> Publicaciones</a></li>
                 <li><a href="#"><i class='bx bx-group'></i> Usuarios</a></li>
+                <li id="nav-reviews"><a href="#"><i class='bx bx-star'></i> Reseñas</a></li>
                 <li><a href="#"><i class='bx bx-category'></i> Categorías</a></li>
             </ul>
 
@@ -82,13 +83,13 @@
                         </div>
                         <div class="card-body">
                             <div class="table-actions"
-                                style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                                style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
                                 <input type="text" id="search-cat" placeholder="Buscar categoría..."
                                     class="form-control"
-                                    style="max-width: 300px; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                                    style="max-width: 300px; width: 100%; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
                             </div>
                             <form id="form-category"
-                                style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+                                style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;">
                                 <input type="text" id="cat-name" placeholder="Nombre (Ej: Indumentaria)" required
                                     style="padding: 0.5rem; flex: 1; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
                                 <input type="text" id="cat-slug" placeholder="Slug (Ej: indumentaria)" required
@@ -164,6 +165,7 @@
                                         <th>Teléfono</th>
                                         <th>Rol</th>
                                         <th>Registro</th>
+                                        <th>Reputación</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usuarios-tbody">
@@ -174,6 +176,37 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Reviews Table (Moderación) -->
+                    <div class="table-card" id="card-reviews" style="display: none; margin-top: 2rem;">
+                        <div class="card-header"
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <h2>Moderación de Reseñas</h2>
+                            <input type="text" id="search-rev" placeholder="Buscar por vendedor o comentario..."
+                                class="form-control"
+                                style="max-width: 300px; padding: 0.5rem; border-radius: var(--border-radius-sm); border: 1px solid var(--color-border);">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>De (Usuario)</th>
+                                        <th>Para (Vendedor)</th>
+                                        <th>Estrellas</th>
+                                        <th>Comentario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviews-tbody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </main>
@@ -181,7 +214,8 @@
 
     <!-- Script simple de Toggle -->
     <script>
-        document.getElementById('toggle-sidebar').addEventListener('click', function () {
+        document.getElementById('toggle-sidebar').addEventListener('click', function (e) {
+            e.stopPropagation(); // Evitar que el clic se propague al body y cierre el menú instantáneamente
             document.getElementById('admin-sidebar').classList.toggle('active');
         });
     </script>

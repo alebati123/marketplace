@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadProduct = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+            const res = await fetch(`/api/products/${productId}`);
             const product = await res.json();
 
             if (res.ok) {
@@ -44,33 +44,239 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dateObj = new Date(product.created_at);
                 document.getElementById('prod-date').textContent = `Publicado el ${dateObj.toLocaleDateString('es-AR')}`;
 
-                // Vendedor
+                // Vendedor y Rating
                 document.getElementById('seller-name').textContent = product.seller_name;
+
+                // Mostrar estrellas
+                const ratingDiv = document.getElementById('seller-rating-display');
+                if (product.seller_reviews_count > 0) {
+                    const stars = Math.round(product.seller_rating);
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= stars) starsHtml += "<i class='bx bxs-star'></i>";
+                        else starsHtml += "<i class='bx bx-star'></i>";
+                    }
+                    starsHtml += ` <span style="color:#666; font-size:0.85rem;">(${product.seller_rating} - ${product.seller_reviews_count} reseñas)</span>`;
+                    ratingDiv.innerHTML = starsHtml;
+                } else {
+                    ratingDiv.innerHTML = "<span style='color:#666; font-size:0.85rem;'>Sin calificaciones aún</span>";
+                }
+
+                // Ubicación de Entrega
+                const locSpan = document.getElementById('prod-location');
+                if (product.location_type === 'personalizado' && product.location_custom) {
+                    locSpan.textContent = product.location_custom;
+                } else if (product.user_location) {
+                    locSpan.textContent = product.user_location + ' (Perfil)';
+                } else {
+                    locSpan.textContent = 'Punto de encuentro a acordar';
+                }
 
                 // Enlace de WhatsApp dinámico
                 const phone = product.seller_phone || '';
                 const cleanPhone = phone.replace(/\D/g, ''); // Deja solo números
-                const msg = `Hola, me interesa tu producto "${product.title}" publicado en MarketPlace LAMBERTUCCI.`;
-                const finalLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
-
                 const wpBtn = document.getElementById('btn-whatsapp');
+                // --------- REGLA: BOTÓN DE CALIFICACIÓN ---------
+                const btnRate = document.getElementById('btn-rate-seller');
+                btnRate.style.display = 'none'; // Oculto por defecto
+
                 if (cleanPhone) {
-                    wpBtn.href = finalLink;
+                    wpBtn.href = `https://wa.me/${cleanPhone}?text=Hola, me interesa el artículo: ${product.title}`;
+                    wpBtn.addEventListener('click', () => {
+                        // Al mostrar real interes en contactar, habilitamos poder calificar
+                        btnRate.style.display = 'flex';
+                    });
                 } else {
                     wpBtn.style.display = 'none';
                     const wpMsg = document.createElement('p');
-                    wpMsg.style.color = 'red';
-                    wpMsg.textContent = 'El vendedor no proporcionó un celular.';
+                    wpMsg.style.color = '#888';
+                    wpMsg.textContent = 'El vendedor no proporcionó un número de teléfono.';
                     wpBtn.parentNode.insertBefore(wpMsg, wpBtn);
                 }
 
-                // Imagen
+                // --------- MODAL DE CALIFICACIÓN ---------
+                const ratingModal = document.getElementById('rating-modal');
+                const closeRatingModal = document.getElementById('close-rating-modal');
+                const modalSellerName = document.getElementById('modal-seller-name');
+                const rateSellerId = document.getElementById('rate-seller-id');
+                const rateStars = document.querySelectorAll('.rate-star');
+                const rateValueInput = document.getElementById('rate-value');
+                const ratingForm = document.getElementById('rating-form');
+
+                // Abrir modal
+                btnRate.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const token = localStorage.getItem('user_token');
+                    if (!token) {
+                        alert("Debes iniciar sesión para calificar a un vendedor.");
+                        window.location.href = 'auth.html';
+                        return;
+                    }
+                    modalSellerName.textContent = product.seller_name;
+                    rateSellerId.value = product.user_id;
+                    ratingModal.style.display = 'block';
+                });
+
+                // Cerrar modal
+                closeRatingModal.onclick = () => ratingModal.style.display = 'none';
+                window.onclick = (e) => { if (e.target === ratingModal) ratingModal.style.display = 'none'; }
+
+                // Click en estrellas del modal
+                rateStars.forEach(star => {
+                    star.addEventListener('click', () => {
+                        const val = parseInt(star.getAttribute('data-val'));
+                        rateValueInput.value = val;
+                        // Pintar
+                        rateStars.forEach(s => {
+                            if (parseInt(s.getAttribute('data-val')) <= val) {
+                                s.style.color = '#ffb400';
+                            } else {
+                                s.style.color = '#ccc';
+                            }
+                        });
+                    });
+                });
+
+                // Enviar form
+                ratingForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const rVal = rateValueInput.value;
+                    if (!rVal) {
+                        alert("Por favor selecciona una cantidad de estrellas primero.");
+                        return;
+                    }
+                    const rComment = document.getElementById('rate-comment').value;
+                    const sellerId = rateSellerId.value;
+
+                    try {
+                        const res = await fetch(`/api/users/${sellerId}/rate`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('user_token')
+                            },
+                            body: JSON.stringify({ rating: rVal, comment: rComment })
+                        });
+
+                        const data = await res.json();
+                        if (res.ok) {
+                            alert(data.message);
+                            location.reload(); // Recargar para ver estrellas nuevas
+                        } else {
+                            alert("Error: " + data.error);
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Hubo un error de conexión.");
+                    }
+                });
+                // -----------------------------------------
+
+                // Imagen Principal y Miniaturas
                 const mainImg = document.getElementById('main-img');
+                const thumbList = document.getElementById('thumb-list');
+
+                let allImages = [];
                 if (product.image_url) {
-                    mainImg.src = product.image_url;
+                    allImages.push(product.image_url);
                 } else {
-                    mainImg.src = 'https://placehold.co/800x600?text=Sin+Imagen';
+                    allImages.push('https://placehold.co/800x600?text=Sin+Imagen');
                 }
+
+                if (product.additional_images) {
+                    try {
+                        const extraPhotos = JSON.parse(product.additional_images);
+                        allImages = allImages.concat(extraPhotos);
+                    } catch (e) {
+                        console.error('Error parseando imagenes adicionales:', e);
+                    }
+                }
+
+                // Fijar principal
+                mainImg.src = allImages[0];
+
+                // Renderizar thumb-list solo si hay > 1
+                thumbList.innerHTML = '';
+                if (allImages.length > 1) {
+                    allImages.forEach((imgUrl, idx) => {
+                        const thumbWrap = document.createElement('div');
+                        thumbWrap.className = 'thumb';
+                        if (idx === 0) thumbWrap.classList.add('active');
+
+                        const imgEl = document.createElement('img');
+                        imgEl.src = imgUrl;
+                        imgEl.alt = 'Miniatura ' + (idx + 1);
+
+                        thumbWrap.appendChild(imgEl);
+
+                        thumbWrap.addEventListener('click', () => {
+                            mainImg.src = imgUrl;
+                            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                            thumbWrap.classList.add('active');
+                        });
+
+                        thumbList.appendChild(thumbWrap);
+                    });
+                }
+
+                // --------- MÁS DEL VENDEDOR ---------
+                const loadMoreProducts = async () => {
+                    try {
+                        const moreContainer = document.getElementById('more-products-container');
+                        const moreGrid = document.getElementById('more-products-grid');
+                        if (!moreContainer || !moreGrid) return;
+
+                        document.getElementById('more-products-seller-name').textContent = product.seller_name;
+
+                        const res = await fetch(`/api/products/user/${product.user_id}/other/${productId}`);
+                        const extraProducts = await res.json();
+
+                        if (res.ok && extraProducts.length > 0) {
+                            moreContainer.style.display = 'block';
+                            moreGrid.innerHTML = '';
+
+                            const formatPrice = (price) => {
+                                return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(price);
+                            };
+
+                            extraProducts.forEach(p => {
+                                let conditionLabel = p.condition_status;
+                                let conditionClass = '';
+                                if (p.condition_status === 'nuevo') {
+                                    conditionLabel = 'Nuevo';
+                                    conditionClass = 'new';
+                                } else if (p.condition_status === 'usado') {
+                                    conditionLabel = 'Usado';
+                                    conditionClass = 'used';
+                                } else {
+                                    conditionLabel = 'Como Nuevo';
+                                }
+
+                                const imageUrl = p.image_url || 'https://placehold.co/300x200?text=Sin+Imagen';
+
+                                const card = document.createElement('div');
+                                card.className = 'product-card';
+                                card.innerHTML = `
+                                    <div class="product-img">
+                                        <span class="badge condition ${conditionClass}">${conditionLabel}</span>
+                                        <img src="${imageUrl}" alt="${p.title}">
+                                    </div>
+                                    <div class="product-info">
+                                        <span class="product-category">${p.category_name}</span>
+                                        <h3 class="product-title">${p.title}</h3>
+                                        <div class="product-price">${formatPrice(p.price)}</div>
+                                        <a href="producto.html?id=${p.id}" class="btn btn-outline btn-block">Ver Artículo</a>
+                                    </div>
+                                `;
+                                moreGrid.appendChild(card);
+                            });
+                        }
+                    } catch (err) {
+                        console.error('Error cargando sugerencias:', err);
+                    }
+                };
+
+                loadMoreProducts();
 
             } else {
                 document.querySelector('.product-layout').innerHTML = `<h2>${product.error || 'Producto no encontrado'}</h2>`;

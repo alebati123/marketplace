@@ -27,10 +27,16 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const uploadRoutes = require('./routes/upload');
 const categoryRoutes = require('./routes/categories');
+const userRoutes = require('./routes/users');
 
 // Rutas base
 app.get('/api/health', (req, res) => {
     res.json({ message: 'API del Marketplace funcionando correctamente' });
+});
+
+// Redirigir el tráfico raíz (/) hacia el archivo inicio.html
+app.get('/', (req, res) => {
+    res.redirect('/inicio.html');
 });
 
 // Registrar Rutas
@@ -38,6 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/media', uploadRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/users', userRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

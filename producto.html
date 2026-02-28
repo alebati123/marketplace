@@ -13,22 +13,28 @@
 <body>
 
     <nav class="navbar">
-        <a href="inicio.html" class="navbar-brand">
-            <h1>LAMBERTUCCI</h1>
-            <span>Compra & Venta</span>
-        </a>
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand">
+                <h1>LAMBERTUCCI</h1>
+                <span>Compra & Venta</span>
+            </a>
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
         <ul class="navbar-nav">
             <li><a href="inicio.html" class="nav-item">Inicio</a></li>
             <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
-            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Quiero
-                    Vender</a></li>
+            <li><a href="servicios.html" class="nav-item">Servicios</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Publicar</a></li>
             <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
         </ul>
         <div class="navbar-actions">
             <!-- Asumiendo usuario logueado en esta demo para maquetación -->
             <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
             <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
-                style="display: none;">Quiero Vender</a>
+                style="display: none;">Publicar</a>
         </div>
     </nav>
 
@@ -36,9 +42,14 @@
 
         <!-- Breadcrumb -->
         <div class="breadcrumb" id="product-breadcrumb">
-            <a href="inicio.html">Inicio</a> &gt;
-            <a href="publicaciones.html" id="bread-cat">Cargando...</a> &gt;
-            <span id="bread-title">Cargando...</span>
+            <a href="publicaciones.html" class="btn btn-outline"
+                style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; margin-bottom: 1rem; border-color: var(--color-border);"><i
+                    class='bx bx-left-arrow-alt'></i> Volver al Catálogo</a>
+            <div style="margin-top: 0.5rem;">
+                <a href="inicio.html">Inicio</a> &gt;
+                <a href="publicaciones.html" id="bread-cat">Cargando...</a> &gt;
+                <span id="bread-title">Cargando...</span>
+            </div>
         </div>
 
         <div class="product-layout">
@@ -68,13 +79,21 @@
                         <div class="avatar"><i class='bx bx-user'></i></div>
                         <div>
                             <h4 id="seller-name">Cargando vendedor...</h4>
-                            <p><i class='bx bx-map'></i> Ubicación no definida</p>
+                            <div id="seller-rating-display"
+                                style="color: #ffb400; font-size: 0.9rem; margin-bottom: 0.2rem;">
+                                <!-- Estrellas dinámicas aquí -->
+                            </div>
+                            <p><i class='bx bx-map'></i> <span id="prod-location">Cargando ubicación...</span></p>
                         </div>
                     </div>
-                    <!-- Boton de WP -->
+                    <!-- Botones de Interacción -->
                     <a href="#" target="_blank" class="btn btn-whatsapp btn-block" id="btn-whatsapp">
                         <i class='bx bxl-whatsapp'></i> Contactar por WhatsApp
                     </a>
+                    <button class="btn btn-outline btn-block" id="btn-rate-seller"
+                        style="margin-top: 0.5rem; justify-content: center;">
+                        <i class='bx bx-star'></i> Calificar Vendedor
+                    </button>
                     <p class="security-tip"><i class='bx bx-check-shield'></i> Acuerda el pago y entrega directamente
                         con el vendedor.</p>
                 </div>
@@ -97,6 +116,52 @@
         </div>
 
     </main>
+
+    <!-- Modal para Calificar al Vendedor -->
+    <div id="rating-modal" class="modal"
+        style="display: none; position: fixed; z-index: 1500; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content"
+            style="background-color: #fff; margin: 10% auto; padding: 2rem; border-radius: 12px; max-width: 400px; position: relative;">
+            <span id="close-rating-modal"
+                style="position: absolute; right: 1.5rem; top: 1rem; font-size: 1.5rem; cursor: pointer;">&times;</span>
+            <h2 style="margin-bottom: 1rem;">Calificar a <span id="modal-seller-name">este vendedor</span></h2>
+
+            <form id="rating-form">
+                <input type="hidden" id="rate-seller-id">
+                <div class="form-group" style="text-align: center; font-size: 2rem; color: #ccc; cursor: pointer;">
+                    <!-- Estrellas Interactivas -->
+                    <i class='bx bxs-star rate-star' data-val="1"></i>
+                    <i class='bx bxs-star rate-star' data-val="2"></i>
+                    <i class='bx bxs-star rate-star' data-val="3"></i>
+                    <i class='bx bxs-star rate-star' data-val="4"></i>
+                    <i class='bx bxs-star rate-star' data-val="5"></i>
+                </div>
+                <!-- Input real oculto -->
+                <input type="hidden" id="rate-value" required>
+
+                <div class="form-group">
+                    <label>Comentario (Opcional)</label>
+                    <textarea id="rate-comment" class="form-control" rows="3"
+                        placeholder="¿Cómo fue tu experiencia de compra o charla?"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block"><i class='bx bxs-paper-plane'></i> Enviar
+                    Calificación</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Más Productos del Vendedor -->
+    <section class="more-products-section container" style="margin-top: 3rem; margin-bottom: 3rem; display: none;"
+        id="more-products-container">
+        <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-main); font-size: 1.8rem;">
+            Más de <span id="more-products-seller-name">este vendedor</span>
+        </h3>
+        <!-- Usamos el mismo estilo de grilla del index -->
+        <div class="product-grid" id="more-products-grid">
+            <!-- Cargado por JS -->
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="container footer-content text-center"
