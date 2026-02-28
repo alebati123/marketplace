@@ -156,15 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert('Publicación eliminada correctamente.');
+                Swal.fire("Aviso", 'Publicación eliminada correctamente.', "info");
                 fetchMyProducts(); // Recargar grilla
             } else {
                 const data = await res.json();
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión al eliminar.');
+            Swal.fire("Aviso", 'Fallo de conexión al eliminar.', "info");
         }
     };
 
@@ -208,19 +208,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert('¡Publicación actualizada con éxito!');
+                Swal.fire("Aviso", '¡Publicación actualizada con éxito!', "info");
                 modal.style.display = 'none';
                 fetchMyProducts();
             } else {
                 const data = await res.json();
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión al guardar cambios.');
+            Swal.fire("Aviso", 'Fallo de conexión al guardar cambios.', "info");
         }
     });
 
     // Iniciar
     fetchMyProducts();
 });
+

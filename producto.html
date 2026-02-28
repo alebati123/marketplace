@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/producto.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -90,6 +91,9 @@
                     <a href="#" target="_blank" class="btn btn-whatsapp btn-block" id="btn-whatsapp">
                         <i class='bx bxl-whatsapp'></i> Contactar por WhatsApp
                     </a>
+                    <button class="btn btn-outline btn-block" id="btn-save-favorite" style="margin-top: 0.5rem; justify-content: center; display: none;">
+                        <i class="bx bx-heart"></i> <span id="fav-btn-text">Guardar en Favoritos</span>
+                    </button>
                     <button class="btn btn-outline btn-block" id="btn-rate-seller"
                         style="margin-top: 0.5rem; justify-content: center;">
                         <i class='bx bx-star'></i> Calificar Vendedor
@@ -178,3 +182,4 @@
 </body>
 
 </html>
+

@@ -13,10 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
             // Quitar clase active a todos los forms
             forms.forEach(f => f.classList.remove('active'));
 
-            // Agregar clace active al clickeado
+            // Add active class to clicked
             tab.classList.add('active');
-            const targetId = tab.getAttribute('data-target') + '-form';
-            document.getElementById(targetId).classList.add('active');
+            const targetId = tab.getAttribute('data-target');
+            document.getElementById(targetId + '-form').classList.add('active');
+
+            // Dynamic Banner Text for Desktop
+            const bannerHeader = document.querySelector('.banner-content h2');
+            const bannerPara = document.querySelector('.banner-content p');
+            if (bannerHeader && bannerPara) {
+                if (targetId === 'register') {
+                    bannerHeader.innerText = 'Únete a nosotros';
+                    bannerPara.innerText = 'Crea tu cuenta gratis hoy y empieza a comprar y vender de forma segura.';
+                } else {
+                    bannerHeader.innerText = 'Bienvenido de nuevo';
+                    bannerPara.innerText = 'Únete a la comunidad de MarketPlace. Compra y vende de forma segura y directa.';
+                }
+            }
         });
     });
 
@@ -33,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const termsAccepted = document.getElementById('reg-terms').checked;
 
             if (!termsAccepted) {
-                alert('Debes aceptar los Términos y Condiciones para registrarte.');
+                Swal.fire("Aviso", 'Debes aceptar los Términos y Condiciones para registrarte.', "info");
                 return;
             }
 
@@ -47,15 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert('¡Cuenta creada! Hemos enviado un enlace a tu correo para verificarla antes de poder conectarte.');
+                    Swal.fire("Aviso", '¡Cuenta creada! Hemos enviado un enlace a tu correo para verificarla antes de poder conectarte.', "info");
                     tabs[0].click(); // Redirige visualmente al Tab de Login
                     registerForm.reset();
                 } else {
-                    alert('Error al registrarse: ' + (data.error || 'Ocurrió un problema'));
+                    Swal.fire("Aviso", 'Error al registrarse: ' + (data.error || 'Ocurrió un problema'), "info");
                 }
             } catch (error) {
                 console.error(error);
-                alert('Error al conectar con el servidor.');
+                Swal.fire("Aviso", 'Error al conectar con el servidor.', "info");
             }
         });
     }
@@ -84,14 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('user_data', JSON.stringify(data.user));
                 localStorage.setItem('user_name', data.user.name);
 
-                alert('Inicio de sesión exitoso');
+                Swal.fire("Aviso", 'Inicio de sesión exitoso', "info");
                 window.location.href = 'inicio.html';
             } else {
-                alert('Error al ingresar: ' + (data.error || 'Credenciales inválidas'));
+                Swal.fire("Aviso", 'Error al ingresar: ' + (data.error || 'Credenciales inválidas'), "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Error al conectar con el servidor.');
+            Swal.fire("Aviso", 'Error al conectar con el servidor.', "info");
         }
     });
 });
+

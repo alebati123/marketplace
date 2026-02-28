@@ -47,8 +47,22 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFilters.category = urlParams.get('cat');
     }
 
+    let userFavorites = [];
+
     const fetchProducts = async () => {
         try {
+            // Obtener favoritos primero si está logueado
+            const token = localStorage.getItem('user_token');
+            if (token) {
+                try {
+                    const fRes = await fetch('/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (fRes.ok) {
+                        const fData = await fRes.json();
+                        userFavorites = fData.map(f => f.id);
+                    }
+                } catch (e) { console.error('Error cargando favoritos', e); }
+            }
+
             let url = '/api/products';
             const params = new URLSearchParams();
             if (currentFilters.search) params.append('search', currentFilters.search);
@@ -111,8 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
             card.href = `producto.html?id=${p.id}`;
             card.className = 'product-card';
             card.innerHTML = `
-                <div class="product-img">
-                    <span class="badge condition ${conditionClass}">${conditionLabel}</span>
+                <div class="product-img" style="position: relative;">
+                    <button class="btn-favorite" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;" onclick="event.preventDefault(); window.toggleFavorite(${p.id}, this.querySelector('i'))">
+                        <i class='bx ${userFavorites.includes(p.id) ? 'bxs-heart' : 'bx-heart'}' style="font-size: 1.4rem; transition: color 0.2s; ${userFavorites.includes(p.id) ? 'color: #e74c3c;' : 'color: #555;'}"></i>
+                    </button>
+                    ${conditionLabel ? `<span class="badge condition ${conditionClass}">${conditionLabel}</span>` : ''}
                     <img src="${imageUrl}" alt="${p.title}">
                 </div>
                 <div class="product-info">
@@ -205,3 +222,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Iniciar
     loadCategoriesAndInit();
 });
+

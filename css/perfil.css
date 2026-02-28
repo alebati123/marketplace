@@ -1,0 +1,173 @@
+/* perfil.css */
+
+.profile-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+    animation: fadeIn 0.5s ease;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.profile-header h1 {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.profile-header p {
+    color: var(--color-text-muted);
+}
+
+.profile-card {
+    background: var(--color-surface);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 3rem;
+    border: 1px solid var(--color-border);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-container i {
+    position: absolute;
+    left: 1rem;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+}
+
+.input-container input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    border: 1px solid #d1d5db;
+    border-radius: var(--border-radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text-main);
+    transition: all var(--transition-fast);
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.locked-input {
+    background-color: #f3f4f6;
+    border-radius: var(--border-radius-md);
+    cursor: not-allowed;
+}
+
+.locked-input input {
+    background: transparent;
+    pointer-events: none;
+    border: 1px solid transparent;
+    color: #6b7280;
+}
+
+.locked-input .lock-icon {
+    position: absolute;
+    right: 1rem;
+    left: auto;
+    color: #9ca3af;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.form-actions {
+    margin-top: 3rem;
+    text-align: right;
+    border-top: 1px solid var(--color-border);
+    padding-top: 2rem;
+}
+
+.tooltip-container {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.8rem;
+    position: absolute;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    margin-left: -125px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: normal;
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .form-actions {
+        text-align: center;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}

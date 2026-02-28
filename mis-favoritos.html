@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorar Servicios Profesionales - MarketPlace</title>
+    <title>Mis Favoritos - MarketPlace</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/publicaciones.css">
@@ -30,8 +30,9 @@
         <ul class="navbar-nav">
             <li><a href="inicio.html" class="nav-item">Inicio</a></li>
             <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
-            <li><a href="servicios.html" class="nav-item active">Servicios</a></li>
-            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Publicar</a></li>
+            <li><a href="servicios.html" class="nav-item">Servicios</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html"
+                    class="nav-item">Publicar</a></li>
             <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
         </ul>
         <div class="navbar-actions">
@@ -42,56 +43,19 @@
         </div>
     </nav>
 
-    <main class="page-container container section-padding">
+    <main class="container section-padding">
 
-        <!-- Sidebar de Filtros -->
-        <aside class="sidebar-filters">
-            <div class="filter-group">
-                <h3>Buscar</h3>
-                <div class="search-input">
-                    <i class='bx bx-search'></i>
-                    <input type="text" placeholder="Ej: Celular samsung..." id="filter-search">
-                </div>
-            </div>
+        <!-- Sidebar Oculta para no romper layout baseFlex -->
+        <aside class="sidebar-filters" style="display: none;"></aside>
 
-            <!-- Los filtros de Categorías y Estado fueron removidos porque todos los ítems aquí son "Servicios" -->
-
-            <div class="filter-group">
-                <h3>Precio</h3>
-                <div class="price-range">
-                    <input type="number" placeholder="Mínimo">
-                    <span>-</span>
-                    <input type="number" placeholder="Máximo">
-                </div>
-                <button class="btn btn-outline btn-block mt-2">Aplicar</button>
-            </div>
-        </aside>
-
-        <!-- Galería de Productos -->
+        <!-- Galería de Favoritos -->
         <section class="products-content">
             <div class="products-header">
-                <h2>Resultados <span class="results-count">(0)</span></h2>
-                <div class="header-actions">
-                    <button id="toggle-filters-btn" class="btn btn-outline mobile-filters-btn">
-                        <i class='bx bx-filter'></i> Filtros
-                    </button>
-                    <div class="sort-by">
-                        <label>Ordenar por:</label>
-                        <select>
-                            <option>Más recientes</option>
-                            <option>Menor precio</option>
-                            <option>Mayor precio</option>
-                        </select>
-                    </div>
-                </div>
+                <h2>Mis Favoritos <span class="results-count">(0)</span></h2>
             </div>
-
             <div class="product-grid" id="productos-galeria">
                 <!-- Se inyectaran JS -->
             </div>
-
-            <!-- Paginación (Oculta hasta futura implementación del backend) -->
-            <!-- <div class="pagination"></div> -->
         </section>
 
     </main>
@@ -107,7 +71,7 @@
         </div>
     </footer>
     <script src="js/global.js"></script>
-    <script src="js/servicios.js"></script>
+    <script src="js/mis-favoritos.js"></script>
 </body>
 
 </html>

@@ -105,3 +105,53 @@ exports.deleteReview = async (req, res) => {
         res.status(500).json({ error: 'Hubo un error al eliminar la reseña' });
     }
 };
+
+// ==========================================
+// USER PROFILE MANAGEMENT
+// ==========================================
+
+// Obtener detalles del perfil del usuario (nombre, email, telefono, etc)
+exports.getProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('userId', sql.Int, userId)
+            .query('SELECT name, email, phone, role, created_at FROM users WHERE id = @userId');
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.json(result.recordset[0]);
+    } catch (error) {
+        console.error('Error obteniendo perfil:', error);
+        res.status(500).json({ error: 'Error del servidor al obtener el perfil.' });
+    }
+};
+
+// Actualizar perfil (principalmente telefono y nombre)
+exports.updateProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { name, phone } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ error: 'El nombre es obligatorio.' });
+        }
+
+        const pool = await poolPromise;
+
+        await pool.request()
+            .input('userId', sql.Int, userId)
+            .input('name', sql.NVarChar, name)
+            .input('phone', sql.NVarChar, phone || null)
+            .query('UPDATE users SET name = @name, phone = @phone WHERE id = @userId');
+
+        res.json({ message: 'Perfil actualizado exitosamente.' });
+    } catch (error) {
+        console.error('Error actualizando perfil:', error);
+        res.status(500).json({ error: 'Error agregando el teléfono o actualizando el perfil.' });
+    }
+};

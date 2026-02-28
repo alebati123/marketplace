@@ -94,6 +94,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     wpBtn.parentNode.insertBefore(wpMsg, wpBtn);
                 }
 
+                // === LÓGICA DE FAVORITOS INDIVIDUAL ===
+                const btnSaveFav = document.getElementById('btn-save-favorite');
+                const favBtnText = document.getElementById('fav-btn-text');
+                const token = localStorage.getItem('user_token');
+
+                if (token && btnSaveFav) {
+                    btnSaveFav.style.display = 'flex'; // Mostrar si está logueado
+
+                    // Verificar estado inicial
+                    fetch('/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } })
+                        .then(res => res.json())
+                        .then(faves => {
+                            if (faves.some(f => f.id === product.id)) {
+                                btnSaveFav.querySelector('i').className = 'bx bxs-heart';
+                                btnSaveFav.querySelector('i').style.color = '#e74c3c';
+                                favBtnText.textContent = 'Quitar de Favoritos';
+                            }
+                        }).catch(e => console.error(e));
+
+                    btnSaveFav.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const icon = btnSaveFav.querySelector('i');
+                        await window.toggleFavorite(product.id, icon);
+
+                        // Actualizar texto tras toggle
+                        const isSolid = icon.classList.contains('bxs-heart');
+                        favBtnText.textContent = isSolid ? 'Quitar de Favoritos' : 'Guardar en Favoritos';
+                    });
+                }
+                // =====================================
+
                 // --------- MODAL DE CALIFICACIÓN ---------
                 const ratingModal = document.getElementById('rating-modal');
                 const closeRatingModal = document.getElementById('close-rating-modal');
@@ -108,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                     const token = localStorage.getItem('user_token');
                     if (!token) {
-                        alert("Debes iniciar sesión para calificar a un vendedor.");
+                        Swal.fire("Aviso", "Debes iniciar sesión para calificar a un vendedor.", "info");
                         window.location.href = 'auth.html';
                         return;
                     }
@@ -142,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                     const rVal = rateValueInput.value;
                     if (!rVal) {
-                        alert("Por favor selecciona una cantidad de estrellas primero.");
+                        Swal.fire("Aviso", "Por favor selecciona una cantidad de estrellas primero.", "info");
                         return;
                     }
                     const rComment = document.getElementById('rate-comment').value;
@@ -160,14 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const data = await res.json();
                         if (res.ok) {
-                            alert(data.message);
+                            Swal.fire("Aviso", data.message, "info");
                             location.reload(); // Recargar para ver estrellas nuevas
                         } else {
-                            alert("Error: " + data.error);
+                            Swal.fire("Aviso", "Error: " + data.error, "info");
                         }
                     } catch (err) {
                         console.error(err);
-                        alert("Hubo un error de conexión.");
+                        Swal.fire("Aviso", "Hubo un error de conexión.", "info");
                     }
                 });
                 // -----------------------------------------
@@ -254,7 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 const imageUrl = p.image_url || 'https://placehold.co/300x200?text=Sin+Imagen';
 
-                                const card = document.createElement('div');
+                                const card = document.createElement('a');
+                                card.href = `producto.html?id=${p.id}`;
                                 card.className = 'product-card';
                                 card.innerHTML = `
                                     <div class="product-img">
@@ -265,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <span class="product-category">${p.category_name}</span>
                                         <h3 class="product-title">${p.title}</h3>
                                         <div class="product-price">${formatPrice(p.price)}</div>
-                                        <a href="producto.html?id=${p.id}" class="btn btn-outline btn-block">Ver Artículo</a>
                                     </div>
                                 `;
                                 moreGrid.appendChild(card);
@@ -289,3 +320,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadProduct();
 });
+

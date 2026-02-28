@@ -37,8 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class='bx bx-chevron-down'></i>
                 </div>
                 <div class="user-dropdown-content" id="dropdown-menu">
+                    <a href="perfil.html"><i class='bx bx-user'></i> Mi Perfil</a>
                     <a href="publicaciones.html"><i class='bx bx-list-ul'></i> Catálogo</a>
-                    <a href="mis-publicaciones.html"><i class='bx bx-folder'></i> Mis Publicaciones</a>
+                    <a href="mis-publicaciones.html"><i class='bx bx-store-alt'></i> Mis Publicaciones</a>
+                    <a href="mis-favoritos.html"><i class='bx bx-heart'></i> Mis Favoritos</a>
                     ${adminLink}
                     <a href="#" id="btn-logout"><i class='bx bx-log-out'></i> Cerrar Sesión</a>
                 </div>
@@ -51,12 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const logoutAnchor = e.target.closest('#btn-logout');
                 if (logoutAnchor) {
                     e.preventDefault();
-                    const confirmLogout = confirm("¿Deseas cerrar sesión?");
-                    if (confirmLogout) {
-                        localStorage.removeItem('user_token');
-                        localStorage.removeItem('user_name');
-                        window.location.reload();
-                    }
+                    Swal.fire({
+                        title: '¿Deseas cerrar sesión?',
+                        text: "Tu sesión será terminada de forma segura.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#1A1A1A',
+                        cancelButtonColor: '#666',
+                        confirmButtonText: 'Sí, cerrar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            localStorage.removeItem('user_token');
+                            localStorage.removeItem('user_name');
+                            window.location.reload();
+                        }
+                    });
                 }
 
                 // Lógica para abrir/cerrar el dropdown al hacer click (esencial para celulares)
@@ -77,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Si la persona intenta entrar porm url a crear-publicacion sin estar logueado
         if (window.location.pathname.includes('crear-publicacion.html')) {
-            alert('Debes iniciar sesión para publicar un artículo');
+            Swal.fire("Aviso", 'Debes iniciar sesión para publicar un artículo', "info");
             window.location.href = 'auth.html';
         }
     }
@@ -93,4 +105,45 @@ document.addEventListener('DOMContentLoaded', () => {
             if (navbarActions) navbarActions.classList.toggle('active');
         });
     }
+
+    // Lógica Global de Favoritos
+    window.toggleFavorite = async function (productId, btnElement) {
+        const token = localStorage.getItem('user_token');
+        if (!token) {
+            Swal.fire("Aviso", 'Debes iniciar sesión para guardar favoritos.', "info");
+            window.location.href = 'auth.html';
+            return;
+        }
+
+        const isFavorited = btnElement.classList.contains('bxs-heart'); // is solid?
+        const method = isFavorited ? 'DELETE' : 'POST';
+
+        try {
+            const response = await fetch(`/api/favorites/${productId}`, {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Alternar corazón
+                if (isFavorited) {
+                    btnElement.classList.remove('bxs-heart');
+                    btnElement.classList.add('bx-heart');
+                    btnElement.style.color = '';
+                } else {
+                    btnElement.classList.remove('bx-heart');
+                    btnElement.classList.add('bxs-heart');
+                    btnElement.style.color = '#e74c3c'; // Rojo
+                }
+            } else {
+                console.error("No se pudo actualizar el guardado");
+            }
+        } catch (error) {
+            console.error("Error de Red interactuando con favoritos", error);
+        }
+    };
 });
+

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | Lambertucci</title>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    <!-- Perfil CSS -->
+    <link rel="stylesheet" href="css/perfil.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <!-- Navbar (Componentizado dinámicamente) -->
+    <nav class="navbar">
+        <div class="navbar-header">
+            <a href="inicio.html" class="navbar-brand" style="flex-direction: column; display: flex;">
+                <h1 style="margin:0;">LAMBERTUCCI</h1>
+                <span style="font-size: 0.7rem; color: var(--color-secondary); letter-spacing: 2px;">Compra &
+                    Venta</span>
+            </a>
+            <!-- Botón de Hamburguesa para Móviles -->
+            <button class="menu-toggle" id="mobile-menu-btn"
+                style="display: none; font-size: 2rem; background: none; border: none; cursor: pointer; color: var(--color-primary);">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="inicio.html" class="nav-item">Inicio</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
+            <li><a href="servicios.html" class="nav-item">Servicios</a></li>
+            <li class="auth-required" style="display: none;"><a href="crear-publicacion.html"
+                    class="nav-item">Publicar</a></li>
+            <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
+            <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
+                style="display: none;">Publicar</a>
+        </div>
+    </nav>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <h1>Mis Datos</h1>
+            <p>Gestiona tu información personal y detalles de contacto.</p>
+        </div>
+
+        <div class="profile-card">
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="profile-name">Nombre Completo</label>
+                    <div class="input-container">
+                        <i class='bx bx-user'></i>
+                        <input type="text" id="profile-name" required placeholder="Tu nombre real o comercial">
+                    </div>
+                </div>
+
+                <div class="form-group email-group tooltip-container">
+                    <label for="profile-email">Correo Electrónico (Solo Lectura)</label>
+                    <div class="input-container locked-input">
+                        <i class='bx bx-envelope'></i>
+                        <input type="email" id="profile-email" readonly disabled>
+                        <i class='bx bxs-lock-alt lock-icon'></i>
+                    </div>
+                    <span class="tooltip">No es posible cambiar el correo asociado a tu cuenta actualmente.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-phone">WhatsApp / Teléfono</label>
+                    <div class="input-container">
+                        <i class='bx bxl-whatsapp'></i>
+                        <input type="tel" id="profile-phone" placeholder="+54 9 11 1234 5678">
+                    </div>
+                    <small>Este número es vital para coordinar entregas o que te contacten otros usuarios.</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btn-save-profile">
+                        <i class='bx bx-save'></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Lambertucci</h3>
+                <p>Tu marketplace de confianza para antigüedades y artículos seleccionados.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="publicaciones.html">Catálogo</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="nosotros.html">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Contacto</h3>
+                <p><i class='bx bx-envelope'></i> info@lambertucci.com</p>
+                <p><i class='bx bxl-whatsapp'></i> +54 9 11 1234 5678</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Lambertucci Marketplace. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/global.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+
+</html>

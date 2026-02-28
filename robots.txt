@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+Allow: /inicio.html
+Allow: /producto.html
+Allow: /publicaciones.html
+Allow: /nosotros.html
+Allow: /servicios.html
+Allow: /terminos.html
+
+# Rutas y archivos privados que no deben ser indexados
+Disallow: /api/
+Disallow: /admin.html
+Disallow: /auth.html
+Disallow: /crear-publicacion.html
+Disallow: /mis-publicaciones.html
+
+# Directorios internos del servidor (por seguridad)
+Disallow: /config/
+Disallow: /controllers/
+Disallow: /database/
+Disallow: /middleware/
+Disallow: /routes/
+Disallow: /utils/
+Disallow: /node_modules/
+Disallow: /uploads/ No indexar directamente el directorio de subidas (las imágenes se indexarán a través de las páginas)
+
+# Opcional: Especificar la ruta de tu sitemap si tienes uno (cambia tudominio.com por tu dominio real)
+# Sitemap: https://tudominio.com/sitemap.xml

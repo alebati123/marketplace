@@ -25,7 +25,7 @@
     box-shadow: var(--shadow-lg);
     width: 100%;
     max-width: 1000px;
-    height: 600px;
+    min-height: 600px;
 }
 
 /* Banner Izquierdo */
@@ -71,7 +71,7 @@
     padding: 3rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     overflow-y: auto;
 }
 

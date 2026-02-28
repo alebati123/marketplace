@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/auth.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -44,9 +45,28 @@
                     <button class="auth-tab" data-target="register">Crear Cuenta</button>
                 </div>
 
+                <!-- Google Sign-In Button -->
+                <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                    <div id="g_id_onload"
+                        data-client_id="394933811847-v1qcnpbc2m93e6seju9q0jmm6t4j7fvt.apps.googleusercontent.com"
+                        data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin"
+                        data-auto_prompt="false" data-itp_support="true">
+                    </div>
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                        data-text="continue_with" data-size="large" data-logo_alignment="left">
+                    </div>
+                </div>
+
+                <div
+                    style="text-align: center; margin-bottom: 1rem; color: var(--color-text-muted); font-size: 0.9rem;">
+                    ──────── o con tu email ────────</div>
+
                 <!-- Formulario de Login -->
                 <form id="login-form" class="auth-form active">
                     <h3>Inicia Sesión</h3>
+
+
+
                     <div class="form-group">
                         <label for="login-email">Correo Electrónico</label>
                         <div class="input-container">
@@ -104,7 +124,7 @@
                     <div class="form-options terms-checkbox-container"
                         style="margin-top: 1rem; margin-bottom: 1.5rem; justify-content: flex-start;">
                         <label class="checkbox-container" style="font-size: 0.9rem;">
-                            <input type="checkbox" id="reg-terms" required> Acepto los <a href="terminos.html"
+                            <input type="checkbox" id="reg-terms" required> Acepto los <a href="terminos.html?from=auth"
                                 target="_blank"
                                 style="color: var(--color-primary); text-decoration: underline; margin-left: 0.3rem;">Términos
                                 y Condiciones</a>
@@ -119,8 +139,40 @@
         </div>
     </main>
 
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/global.js"></script>
     <script src="js/auth.js"></script>
+
+    <!-- Lógica de Callback de Google -->
+    <script>
+        async function handleGoogleLogin(response) {
+            try {
+                // response.credential contiene el JWT firmado por Google
+                const res = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ googleToken: response.credential })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Guardar la sesión generada por nuestro backend
+                    localStorage.setItem('user_token', data.token);
+                    localStorage.setItem('user_data', JSON.stringify(data.user));
+                    localStorage.setItem('user_name', data.user.name);
+
+                    window.location.href = 'inicio.html';
+                } else {
+                    alert("Error en validación de Google: " + data.error);
+                }
+            } catch (error) {
+                console.error("Error contactando al servidor:", error);
+                alert("Error crítico de red al iniciar sesión con Google.");
+            }
+        }
+    </script>
 </body>
 
 </html>

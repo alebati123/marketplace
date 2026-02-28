@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         previewContainer.innerHTML = '';
 
         if (files.length > 5) {
-            alert('Solo se permiten hasta 5 fotos.');
+            Swal.fire("Aviso", 'Solo se permiten hasta 5 fotos.', "info");
             fileInput.value = ''; // reset
             return;
         }
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('user_token');
         if (!token) {
-            alert('Debes iniciar sesión para publicar un artículo');
+            Swal.fire("Aviso", 'Debes iniciar sesión para publicar un artículo', "info");
             window.location.href = 'auth.html';
             return;
         }
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pub_type === 'servicio') {
             const servicioOption = Array.from(categorySelect.options).find(opt => opt.text.trim().toLowerCase().includes('servicio'));
             if (!servicioOption) {
-                alert("Error crítico: No se encontró la categoría 'Servicios' en la Base de Datos. Contacta al soporte.");
+                Swal.fire("Aviso", "Error crítico: No se encontró la categoría 'Servicios' en la Base de Datos. Contacta al soporte.", "info");
                 return;
             }
             category_id = parseInt(servicioOption.value);
@@ -235,11 +235,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const errorText = await uploadRes.text();
                     console.error("Error backend imagen:", errorText);
-                    alert('Error subiendo imágenes. Verifica Cloudinary. Usando imagen nula.');
+                    Swal.fire("Aviso", 'Error subiendo imágenes. Verifica Cloudinary. Usando imagen nula.', "info");
                 }
             } catch (err) {
                 console.error("Error fetch imagen:", err);
-                alert('No se pudo contactar al servidor para subir foto.');
+                Swal.fire("Aviso", 'No se pudo contactar al servidor para subir foto.', "info");
             } finally {
                 // Restaurar botón
                 const submitBtn = formCrear.querySelector('button[type="submit"]');
@@ -262,17 +262,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (res.ok) {
-                alert('¡Publicación creada exitosamente!');
+                Swal.fire("Aviso", '¡Publicación creada exitosamente!', "info");
                 window.location.href = 'inicio.html';
             } else {
                 const errData = await res.json();
-                alert('No se pudo crear: ' + (errData.error || JSON.stringify(errData)));
+                Swal.fire("Aviso", 'No se pudo crear: ' + (errData.error || JSON.stringify(errData)), "info");
             }
 
         } catch (error) {
             console.error("Error post producto:", error);
-            alert('Error crítico de red al guardar publicación.');
+            Swal.fire("Aviso", 'Error crítico de red al guardar publicación.', "info");
         }
 
     });
 });
+

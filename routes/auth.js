@@ -16,4 +16,7 @@ router.get('/users', authMiddleware, authController.getAllUsers);
 // Ruta para verificar email
 router.get('/verify/:token', authController.verify);
 
+// Ruta para Inicio de Sesión o Registro silencioso con Google Auth
+router.post('/google', authController.googleLogin);
+
 module.exports = router;

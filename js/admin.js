@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const user = JSON.parse(localStorage.getItem('user_data') || '{}');
     if (user.role !== 'admin') {
-        alert('Acceso Denegado. Solo administradores pueden ver esta página.');
+        Swal.fire("Aviso", 'Acceso Denegado. Solo administradores pueden ver esta página.', "info");
         window.location.href = 'inicio.html';
         return;
     }
@@ -130,11 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 catSlugInput.value = '';
                 fetchCategories();
             } else {
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión.');
+            Swal.fire("Aviso", 'Fallo de conexión.', "info");
         }
     });
 
@@ -149,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 fetchCategories();
             } else {
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión.');
+            Swal.fire("Aviso", 'Fallo de conexión.', "info");
         }
     };
 
@@ -220,11 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 fetchProducts();
             } else {
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión.');
+            Swal.fire("Aviso", 'Fallo de conexión.', "info");
         }
     };
 
@@ -399,11 +399,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 fetchAllReviews();
             } else {
-                alert(`Error: ${data.error}`);
+                Swal.fire("Aviso", `Error: ${data.error}`, "info");
             }
         } catch (error) {
             console.error(error);
-            alert('Fallo de conexión al eliminar reseña.');
+            Swal.fire("Aviso", 'Fallo de conexión al eliminar reseña.', "info");
         }
     };
 
@@ -479,3 +479,4 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchCategories();
     fetchProducts();
 });
+

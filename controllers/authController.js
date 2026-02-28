@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendVerificationEmail } = require('../utils/mailer');
+const { OAuth2Client } = require('google-auth-library');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Controlador para Registro
 exports.register = async (req, res) => {
@@ -171,5 +174,92 @@ exports.getAllUsers = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor al obtener usuarios' });
+    }
+};
+
+// Controlador para Login con Google
+exports.googleLogin = async (req, res) => {
+    try {
+        const { googleToken } = req.body;
+
+        if (!googleToken) {
+            return res.status(400).json({ error: 'El Token de Google es obligatorio.' });
+        }
+
+        // Verificar el token provisto por el front-end con la librería oficial
+        const ticket = await googleClient.verifyIdToken({
+            idToken: googleToken,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+
+        const payload = ticket.getPayload();
+        const { email, name, sub: google_id } = payload; // sub es el ID único de Google
+
+        const pool = await poolPromise;
+
+        // Verificar si el usuario ya existe en nuestra base de datos (por email)
+        const checkUser = await pool.request()
+            .input('email', sql.NVarChar, email)
+            .query('SELECT * FROM users WHERE email = @email');
+
+        let user;
+
+        if (checkUser.recordset.length > 0) {
+            // Usuario Existe: Lo iniciamos sesión
+            user = checkUser.recordset[0];
+
+            // (Opcional) Fuerza a que la cuenta pase a "is_verified = 1" por tener Google Auth
+            if (!user.is_verified) {
+                await pool.request()
+                    .input('id', sql.Int, user.id)
+                    .query('UPDATE users SET is_verified = 1 WHERE id = @id');
+                user.is_verified = true;
+            }
+
+        } else {
+            // Usuario No Existe: Lo Registramos automáticamente
+            const randomPassword = crypto.randomBytes(16).toString('hex'); // Pass basura por seguridad
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+            const result = await pool.request()
+                .input('name', sql.NVarChar, name)
+                .input('email', sql.NVarChar, email)
+                .input('password', sql.NVarChar, hashedPassword)
+                .query(`
+                    INSERT INTO users (name, email, password, phone, is_verified) 
+                    OUTPUT inserted.id, inserted.role
+                    VALUES (@name, @email, @password, NULL, 1)
+                `);
+
+            user = {
+                id: result.recordset[0].id,
+                name: name,
+                email: email,
+                role: result.recordset[0].role || 'user',
+            };
+        }
+
+        // Generamos nuestro Token JWT normal del Marketplace
+        const appToken = jwt.sign(
+            { id: user.id, email: user.email, role: user.role, name: user.name },
+            process.env.JWT_SECRET || 'secret_fallback_123',
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            message: 'Login con Google exitoso.',
+            token: appToken,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Error autenticando con Google:", error);
+        res.status(500).json({ error: 'Error del servidor al intentar verificar Google.' });
     }
 };
