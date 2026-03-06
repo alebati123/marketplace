@@ -5,7 +5,14 @@ let pool;
 
 if (process.env.DB_URI) {
     // Para bases de datos en la nube (TiDB, Aiven, Render)
-    pool = mysql.createPool(process.env.DB_URI);
+    const dbConfig = { uri: process.env.DB_URI };
+    if (process.env.DB_SSL === 'true') {
+        dbConfig.ssl = {
+            rejectUnauthorized: true,
+            minVersion: 'TLSv1.2'
+        };
+    }
+    pool = mysql.createPool(dbConfig);
 } else {
     // Para local (u otros)
     pool = mysql.createPool({
