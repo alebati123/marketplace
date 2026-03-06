@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data
     const fetchProfile = async () => {
         try {
-            const res = await fetch('/api/users/profile', {
+            const res = await fetch(BACKEND_URL + '/api/users/profile', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newName = nameInput.value.trim();
             const newPhone = phoneInput.value.trim();
 
-            const res = await fetch('/api/users/profile', {
+            const res = await fetch(BACKEND_URL + '/api/users/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

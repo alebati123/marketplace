@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('user_token');
             if (token) {
                 try {
-                    const fRes = await fetch('/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const fRes = await fetch(BACKEND_URL + '/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
                     if (fRes.ok) {
                         const fData = await fRes.json();
                         userFavorites = fData.map(f => f.id);
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadCategoriesAndInit = async () => {
         try {
-            const res = await fetch('/api/categories');
+            const res = await fetch(BACKEND_URL + '/api/categories');
             const data = await res.json();
             if (res.ok && categoryList) {
                 categoryList.innerHTML = `

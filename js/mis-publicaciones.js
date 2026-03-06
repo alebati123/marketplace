@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchMyProducts = async () => {
         try {
-            const res = await fetch('/api/products/user/me', {
+            const res = await fetch(BACKEND_URL + '/api/products/user/me', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const res = await fetch(`/api/products/${id}`, {
+            const res = await fetch(BACKEND_URL + `/api/products/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const locCustom = locType === 'personalizado' ? document.getElementById('edit-location-custom').value : null;
 
         try {
-            const res = await fetch(`/api/products/${id}`, {
+            const res = await fetch(BACKEND_URL + `/api/products/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

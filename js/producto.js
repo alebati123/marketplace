@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadProduct = async () => {
         try {
-            const res = await fetch(`/api/products/${productId}`);
+            const res = await fetch(BACKEND_URL + `/api/products/${productId}`);
             const product = await res.json();
 
             if (res.ok) {
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnSaveFav.style.display = 'flex'; // Mostrar si está logueado
 
                     // Verificar estado inicial
-                    fetch('/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(BACKEND_URL + '/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(res => res.json())
                         .then(faves => {
                             if (faves.some(f => f.id === product.id)) {
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const sellerId = rateSellerId.value;
 
                     try {
-                        const res = await fetch(`/api/users/${sellerId}/rate`, {
+                        const res = await fetch(BACKEND_URL + `/api/users/${sellerId}/rate`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         document.getElementById('more-products-seller-name').textContent = product.seller_name;
 
-                        const res = await fetch(`/api/products/user/${product.user_id}/other/${productId}`);
+                        const res = await fetch(BACKEND_URL + `/api/products/user/${product.user_id}/other/${productId}`);
                         const extraProducts = await res.json();
 
                         if (res.ok && extraProducts.length > 0) {

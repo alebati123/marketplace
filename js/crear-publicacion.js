@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categorySelect = document.getElementById('categoria');
     const loadCategories = async () => {
         try {
-            const res = await fetch('/api/categories');
+            const res = await fetch(BACKEND_URL + '/api/categories');
             const categories = await res.json();
 
             categorySelect.innerHTML = '<option value="" disabled selected>Selecciona una...</option>';
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.innerHTML = "<i class='bx bx-loader bx-spin'></i> Subiendo imágenes...";
                 submitBtn.disabled = true;
 
-                const uploadRes = await fetch('/api/upload/imagen', {
+                const uploadRes = await fetch(BACKEND_URL + '/api/upload/imagen', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` },
                     // No seteamos Content-Type, fetch lo pone solo con FormData
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Enviar publicación a backend
         try {
-            const res = await fetch('/api/products', {
+            const res = await fetch(BACKEND_URL + '/api/products', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

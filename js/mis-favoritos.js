@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const response = await fetch('/api/favorites', {
+            const response = await fetch(BACKEND_URL + '/api/favorites', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 

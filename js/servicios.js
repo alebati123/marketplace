@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('user_token');
             if (token) {
                 try {
-                    const fRes = await fetch('/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const fRes = await fetch(BACKEND_URL + '/api/favorites', { headers: { 'Authorization': `Bearer ${token}` } });
                     if (fRes.ok) {
                         const fData = await fRes.json();
                         userFavorites = fData.map(f => f.id);

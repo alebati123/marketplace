@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const res = await fetch('/api/auth/register', {
+                const res = await fetch(BACKEND_URL + '/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, phone, password })
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('login-pass').value;
 
         try {
-            const res = await fetch('/api/auth/login', {
+            const res = await fetch(BACKEND_URL + '/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
