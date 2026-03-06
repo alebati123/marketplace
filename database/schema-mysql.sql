@@ -1,7 +1,6 @@
 -- Script de Creación de Tablas para Marketplace en MySQL
 
-CREATE DATABASE IF NOT EXISTS marketplace_db;
-USE marketplace_db;
+-- Script de Creación de Tablas para Marketplace en MySQL
 
 -- Tabla de Usuarios
 CREATE TABLE IF NOT EXISTS users (

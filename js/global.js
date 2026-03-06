@@ -4,6 +4,29 @@
  * como la autenticación visual del Navbar.
  */
 
+// --- NUEVA LÓGICA DE INTERCEPCIÓN DE FETCH PARA BACKEND EXTERNO (RENDER) ---
+const BACKEND_URL = 'https://marketplace-backend-placeholder.onrender.com'; // TODO: Update with real Render URL
+const originalFetch = window.fetch;
+window.fetch = async function () {
+    let [resource, config] = arguments;
+
+    if (typeof resource === 'string') {
+        // Interceptar rutas relativas
+        if (resource.startsWith('/api/')) {
+            resource = BACKEND_URL + resource;
+        }
+        // Interceptar rutas locales hardcodeadas
+        else if (resource.startsWith('http://127.0.0.1:3000/api/')) {
+            resource = resource.replace('http://127.0.0.1:3000', BACKEND_URL);
+        } else if (resource.startsWith('http://localhost:3000/api/')) {
+            resource = resource.replace('http://localhost:3000', BACKEND_URL);
+        }
+    }
+
+    return originalFetch(resource, config);
+};
+// ---------------------------------------------------------------------------
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const isAuthenticated = localStorage.getItem('user_token') !== null;
