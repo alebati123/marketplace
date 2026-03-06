@@ -5,7 +5,7 @@
  */
 
 // --- NUEVA LÓGICA DE INTERCEPCIÓN DE FETCH PARA BACKEND EXTERNO (RENDER) ---
-const BACKEND_URL = 'https://marketplace-backend-placeholder.onrender.com'; // TODO: Update with real Render URL
+const BACKEND_URL = 'https://marketplace-0mol.onrender.com'; // TODO: Update with real Render URL
 const originalFetch = window.fetch;
 window.fetch = async function () {
     let [resource, config] = arguments;
