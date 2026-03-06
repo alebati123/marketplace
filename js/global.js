@@ -145,5 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error de Red interactuando con favoritos", error);
         }
     };
+    // Cargar footer dinámico global si la página lo tiene
+    const footerElement = document.querySelector('footer.footer');
+    if (footerElement) {
+        fetch('footer.html')
+            .then(res => res.text())
+            .then(html => {
+                footerElement.innerHTML = html;
+            })
+            .catch(err => console.error("Error al cargar el footer:", err));
+    }
 });
 

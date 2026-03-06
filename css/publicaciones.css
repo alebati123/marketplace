@@ -190,7 +190,30 @@
 /* Responsive */
 @media (max-width: 900px) {
     .page-container {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .products-content {
+        order: 2;
+        /* Content goes below */
+    }
+
+    .mobile-filters-btn {
+        display: inline-flex;
+    }
+
+    .sidebar-filters {
+        position: static;
+        width: 100%;
+        margin-bottom: 1rem;
+        display: none;
+        order: 1;
+        /* Filter popup goes above the list */
+        /* Smooth visual styling for the dropdown behavior */
+        border: 2px solid var(--color-primary);
+        box-shadow: var(--shadow-md);
     }
 
     .mobile-filters-btn {

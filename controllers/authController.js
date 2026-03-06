@@ -1,4 +1,4 @@
-const { sql, poolPromise } = require('../config/db');
+const { pool } = require('../config/db-mysql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -17,14 +17,10 @@ exports.register = async (req, res) => {
             return res.status(400).json({ error: 'Nombre, email y constraseña son obligatorios' });
         }
 
-        const pool = await poolPromise;
-
         // Verificar si el correo ya existe
-        const existingUsers = await pool.request()
-            .input('email', sql.NVarChar, email)
-            .query('SELECT id FROM users WHERE email = @email');
+        const [existingUsers] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
 
-        if (existingUsers.recordset.length > 0) {
+        if (existingUsers.length > 0) {
             return res.status(400).json({ error: 'El email ya está en uso' });
         }
 
@@ -36,17 +32,10 @@ exports.register = async (req, res) => {
         const verificationToken = crypto.randomBytes(32).toString('hex');
 
         // Insertar usuario
-        const result = await pool.request()
-            .input('name', sql.NVarChar, name)
-            .input('email', sql.NVarChar, email)
-            .input('password', sql.NVarChar, hashedPassword)
-            .input('phone', sql.NVarChar, phone || null)
-            .input('vToken', sql.NVarChar, verificationToken)
-            .query(`
-                INSERT INTO users (name, email, password, phone, verification_token) 
-                OUTPUT inserted.id
-                VALUES (@name, @email, @password, @phone, @vToken)
-            `);
+        const [result] = await pool.query(`
+            INSERT INTO users (name, email, password, phone, verification_token) 
+            VALUES (?, ?, ?, ?, ?)
+        `, [name, email, hashedPassword, phone || null, verificationToken]);
 
         // Enviar correo de verificación
         try {
@@ -57,7 +46,7 @@ exports.register = async (req, res) => {
 
         res.status(201).json({
             message: 'Usuario registrado. Por favor verifica tu correo.',
-            userId: result.recordset[0].id
+            userId: result.insertId
         });
 
     } catch (error) {
@@ -75,18 +64,14 @@ exports.login = async (req, res) => {
             return res.status(400).json({ error: 'Email y contraseña son obligatorios' });
         }
 
-        const pool = await poolPromise;
-
         // Buscar al usuario
-        const result = await pool.request()
-            .input('email', sql.NVarChar, email)
-            .query('SELECT * FROM users WHERE email = @email');
+        const [result] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 
-        if (result.recordset.length === 0) {
+        if (result.length === 0) {
             return res.status(401).json({ error: 'Credenciales inválidas' });
         }
 
-        const user = result.recordset[0];
+        const user = result[0];
 
         // Verificar si la cuenta fue validada por correo
         if (!user.is_verified) {
@@ -127,21 +112,16 @@ exports.login = async (req, res) => {
 exports.verify = async (req, res) => {
     try {
         const { token } = req.params;
-        const pool = await poolPromise;
 
-        const result = await pool.request()
-            .input('token', sql.NVarChar, token)
-            .query('SELECT id FROM users WHERE verification_token = @token AND is_verified = 0');
+        const [result] = await pool.query('SELECT id FROM users WHERE verification_token = ? AND is_verified = 0', [token]);
 
-        if (result.recordset.length === 0) {
+        if (result.length === 0) {
             return res.status(400).send('<div style="font-family:sans-serif; text-align:center; padding:50px;"><h2>El enlace de verificación es inválido o la cuenta ya fue verificada.</h2></div>');
         }
 
-        const userId = result.recordset[0].id;
+        const userId = result[0].id;
 
-        await pool.request()
-            .input('id', sql.Int, userId)
-            .query('UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = @id');
+        await pool.query('UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?', [userId]);
 
         res.send('<div style="font-family:sans-serif; text-align:center; padding:50px; background:#0b192c; color:white;"><h2>¡Cuenta verificada exitosamente!</h2><br><a href="/auth.html" style="background:#ff6b6b; color:white; padding:10px 20px; text-decoration:none; border-radius:10px;">Ya puedes iniciar sesión</a></div>');
     } catch (error) {
@@ -157,19 +137,16 @@ exports.getAllUsers = async (req, res) => {
             return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver los usuarios.' });
         }
 
-        const pool = await poolPromise;
-
         // Seleccionamos datos básicos de todos los usuarios y su puntaje de Reseñas
-        const result = await pool.request()
-            .query(`
-                SELECT u.id, u.name, u.email, u.phone, u.role, u.created_at,
-                       (SELECT COUNT(*) FROM user_reviews WHERE rated_user_id = u.id) as total_reviews,
-                       (SELECT CAST(ROUND(AVG(CAST(rating AS FLOAT)), 1) AS DECIMAL(2,1)) FROM user_reviews WHERE rated_user_id = u.id) as average_rating
-                FROM users u 
-                ORDER BY u.created_at DESC
-            `);
+        const [result] = await pool.query(`
+            SELECT u.id, u.name, u.email, u.phone, u.role, u.created_at,
+                   (SELECT COUNT(*) FROM user_reviews WHERE rated_user_id = u.id) as total_reviews,
+                   (SELECT CAST(ROUND(AVG(rating), 1) AS DECIMAL(2,1)) FROM user_reviews WHERE rated_user_id = u.id) as average_rating
+            FROM users u 
+            ORDER BY u.created_at DESC
+        `);
 
-        res.json(result.recordset);
+        res.json(result);
 
     } catch (error) {
         console.error(error);
@@ -195,25 +172,19 @@ exports.googleLogin = async (req, res) => {
         const payload = ticket.getPayload();
         const { email, name, sub: google_id } = payload; // sub es el ID único de Google
 
-        const pool = await poolPromise;
-
         // Verificar si el usuario ya existe en nuestra base de datos (por email)
-        const checkUser = await pool.request()
-            .input('email', sql.NVarChar, email)
-            .query('SELECT * FROM users WHERE email = @email');
+        const [checkUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 
         let user;
 
-        if (checkUser.recordset.length > 0) {
+        if (checkUser.length > 0) {
             // Usuario Existe: Lo iniciamos sesión
-            user = checkUser.recordset[0];
+            user = checkUser[0];
 
             // (Opcional) Fuerza a que la cuenta pase a "is_verified = 1" por tener Google Auth
             if (!user.is_verified) {
-                await pool.request()
-                    .input('id', sql.Int, user.id)
-                    .query('UPDATE users SET is_verified = 1 WHERE id = @id');
-                user.is_verified = true;
+                await pool.query('UPDATE users SET is_verified = 1 WHERE id = ?', [user.id]);
+                user.is_verified = 1;
             }
 
         } else {
@@ -222,21 +193,16 @@ exports.googleLogin = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(randomPassword, salt);
 
-            const result = await pool.request()
-                .input('name', sql.NVarChar, name)
-                .input('email', sql.NVarChar, email)
-                .input('password', sql.NVarChar, hashedPassword)
-                .query(`
-                    INSERT INTO users (name, email, password, phone, is_verified) 
-                    OUTPUT inserted.id, inserted.role
-                    VALUES (@name, @email, @password, NULL, 1)
-                `);
+            const [result] = await pool.query(`
+                INSERT INTO users (name, email, password, phone, is_verified) 
+                VALUES (?, ?, ?, NULL, 1)
+            `, [name, email, hashedPassword]);
 
             user = {
-                id: result.recordset[0].id,
+                id: result.insertId,
                 name: name,
                 email: email,
-                role: result.recordset[0].role || 'user',
+                role: 'user', // default role
             };
         }
 

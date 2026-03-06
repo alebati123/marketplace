@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.innerHTML = "<i class='bx bx-loader bx-spin'></i> Subiendo imágenes...";
                 submitBtn.disabled = true;
 
-                const uploadRes = await fetch('/api/media/imagen', {
+                const uploadRes = await fetch('/api/upload/imagen', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` },
                     // No seteamos Content-Type, fetch lo pone solo con FormData

@@ -1,4 +1,4 @@
-const { sql, poolPromise } = require('../config/db');
+const { pool } = require('../config/db-mysql');
 
 // Dejar una reseña/rating a un vendedor
 exports.rateUser = async (req, res) => {
@@ -15,38 +15,24 @@ exports.rateUser = async (req, res) => {
             return res.status(400).json({ error: 'No puedes calificarte a ti mismo' });
         }
 
-        const pool = await poolPromise;
-
         // Verificar si ya le dejó reseña antes
-        const existing = await pool.request()
-            .input('reviewer_id', sql.Int, reviewer_id)
-            .input('rated_user_id', sql.Int, rated_user_id)
-            .query('SELECT id FROM user_reviews WHERE reviewer_id = @reviewer_id AND rated_user_id = @rated_user_id');
+        const [existing] = await pool.query('SELECT id FROM user_reviews WHERE reviewer_id = ? AND rated_user_id = ?', [reviewer_id, rated_user_id]);
 
-        if (existing.recordset.length > 0) {
+        if (existing.length > 0) {
             // Actualizar reseña existente
-            await pool.request()
-                .input('rating', sql.Int, rating)
-                .input('comment', sql.NVarChar, comment || null)
-                .input('id', sql.Int, existing.recordset[0].id)
-                .query(`
-                    UPDATE user_reviews 
-                    SET rating = @rating, comment = @comment 
-                    WHERE id = @id
-                `);
+            await pool.query(`
+                UPDATE user_reviews 
+                SET rating = ?, comment = ? 
+                WHERE id = ?
+            `, [rating, comment || null, existing[0].id]);
             return res.json({ message: 'Calificación actualizada exitosamente' });
         }
 
         // Insertar nueva reseña
-        await pool.request()
-            .input('reviewer_id', sql.Int, reviewer_id)
-            .input('rated_user_id', sql.Int, rated_user_id)
-            .input('rating', sql.Int, rating)
-            .input('comment', sql.NVarChar, comment || null)
-            .query(`
-                INSERT INTO user_reviews (reviewer_id, rated_user_id, rating, comment)
-                VALUES (@reviewer_id, @rated_user_id, @rating, @comment)
-            `);
+        await pool.query(`
+            INSERT INTO user_reviews (reviewer_id, rated_user_id, rating, comment)
+            VALUES (?, ?, ?, ?)
+        `, [reviewer_id, rated_user_id, rating, comment || null]);
 
         res.status(201).json({ message: '¡Gracias por calificar a este vendedor!' });
 
@@ -63,8 +49,7 @@ exports.getAllReviews = async (req, res) => {
             return res.status(403).json({ error: 'Acceso denegado' });
         }
 
-        const pool = await poolPromise;
-        const result = await pool.request().query(`
+        const [result] = await pool.query(`
             SELECT r.id, r.rating, r.comment, r.created_at,
                    u1.name as reviewer_name, u1.email as reviewer_email, 
                    u2.name as rated_user_name, u2.email as rated_user_email
@@ -74,7 +59,7 @@ exports.getAllReviews = async (req, res) => {
             ORDER BY r.created_at DESC
         `);
 
-        res.json(result.recordset);
+        res.json(result);
     } catch (error) {
         console.error('Error al obtener reseñas:', error);
         res.status(500).json({ error: 'Hubo un error al cargar las reseñas' });
@@ -89,13 +74,10 @@ exports.deleteReview = async (req, res) => {
         }
 
         const { id } = req.params;
-        const pool = await poolPromise;
 
-        const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query('DELETE FROM user_reviews WHERE id = @id');
+        const [result] = await pool.query('DELETE FROM user_reviews WHERE id = ?', [id]);
 
-        if (result.rowsAffected[0] === 0) {
+        if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Reseña no encontrada' });
         }
 
@@ -114,17 +96,14 @@ exports.deleteReview = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {
         const userId = req.user.id;
-        const pool = await poolPromise;
 
-        const result = await pool.request()
-            .input('userId', sql.Int, userId)
-            .query('SELECT name, email, phone, role, created_at FROM users WHERE id = @userId');
+        const [result] = await pool.query('SELECT name, email, phone, role, created_at FROM users WHERE id = ?', [userId]);
 
-        if (result.recordset.length === 0) {
+        if (result.length === 0) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        res.json(result.recordset[0]);
+        res.json(result[0]);
     } catch (error) {
         console.error('Error obteniendo perfil:', error);
         res.status(500).json({ error: 'Error del servidor al obtener el perfil.' });
@@ -141,13 +120,7 @@ exports.updateProfile = async (req, res) => {
             return res.status(400).json({ error: 'El nombre es obligatorio.' });
         }
 
-        const pool = await poolPromise;
-
-        await pool.request()
-            .input('userId', sql.Int, userId)
-            .input('name', sql.NVarChar, name)
-            .input('phone', sql.NVarChar, phone || null)
-            .query('UPDATE users SET name = @name, phone = @phone WHERE id = @userId');
+        await pool.query('UPDATE users SET name = ?, phone = ? WHERE id = ?', [name, phone || null, userId]);
 
         res.json({ message: 'Perfil actualizado exitosamente.' });
     } catch (error) {
