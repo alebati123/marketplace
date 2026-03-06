@@ -5,25 +5,23 @@
  */
 
 // --- NUEVA LÓGICA DE INTERCEPCIÓN DE FETCH PARA BACKEND EXTERNO (RENDER) ---
-const BACKEND_URL = 'https://marketplace-0mol.onrender.com'; // TODO: Update with real Render URL
+const BACKEND_URL = 'https://marketplace-0mol.onrender.com';
 const originalFetch = window.fetch;
 window.fetch = async function () {
     let [resource, config] = arguments;
-
-    if (typeof resource === 'string') {
-        // Interceptar rutas relativas
-        if (resource.startsWith('/api/')) {
-            resource = BACKEND_URL + resource;
-        }
-        // Interceptar rutas locales hardcodeadas
-        else if (resource.startsWith('http://127.0.0.1:3000/api/')) {
-            resource = resource.replace('http://127.0.0.1:3000', BACKEND_URL);
-        } else if (resource.startsWith('http://localhost:3000/api/')) {
-            resource = resource.replace('http://localhost:3000', BACKEND_URL);
-        }
+    
+    // Si la ruta empieza con /api/, le pegamos la URL de Render antes
+    if (typeof resource === 'string' && resource.startsWith('/api/')) {
+        resource = BACKEND_URL + resource;
+    } 
+    // Si la ruta empieza con localhost (tu código viejo), la cambiamos por Render
+    else if (typeof resource === 'string' && resource.includes('localhost:3000')) {
+        resource = resource.replace(/http:\/\/localhost:3000/g, BACKEND_URL)
+                           .replace(/http:\/\/127\.0\.0\.1:3000/g, BACKEND_URL);
     }
-
+    
     return originalFetch(resource, config);
+
 };
 // ---------------------------------------------------------------------------
 
