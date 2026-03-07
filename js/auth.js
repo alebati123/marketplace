@@ -60,9 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok) {
-                    Swal.fire("Aviso", '¡Cuenta creada! Hemos enviado un enlace a tu correo para verificarla antes de poder conectarte.', "info");
-                    tabs[0].click(); // Redirige visualmente al Tab de Login
-                    registerForm.reset();
+                    Swal.fire("Aviso", '¡Cuenta creada con éxito! Ingresando...', "success");
+                    localStorage.setItem('user_token', data.token);
+                    localStorage.setItem('user_data', JSON.stringify(data.user));
+                    localStorage.setItem('user_name', data.user.name);
+                    window.location.href = 'inicio.html';
                 } else {
                     Swal.fire("Aviso", 'Error al registrarse: ' + (data.error || 'Ocurrió un problema'), "info");
                 }

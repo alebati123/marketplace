@@ -28,25 +28,29 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Generar token de verificación
-        const verificationToken = crypto.randomBytes(32).toString('hex');
-
-        // Insertar usuario
+        // Insertar usuario ya verificado (Por restricciones SMTP de Render)
         const [result] = await pool.query(`
-            INSERT INTO users (name, email, password, phone, verification_token) 
-            VALUES (?, ?, ?, ?, ?)
-        `, [name, email, hashedPassword, phone || null, verificationToken]);
+            INSERT INTO users (name, email, password, phone, is_verified) 
+            VALUES (?, ?, ?, ?, 1)
+        `, [name, email, hashedPassword, phone || null]);
 
-        // Enviar correo de verificación
-        try {
-            await sendVerificationEmail(email, verificationToken);
-        } catch (err) {
-            console.error('No se pudo enviar correo, pero el usuario se registró', err);
-        }
+        const user = {
+            id: result.insertId,
+            name: name,
+            email: email,
+            role: 'user'
+        };
+
+        const token = jwt.sign(
+            { id: user.id, email: user.email, role: user.role, name: user.name },
+            process.env.JWT_SECRET || 'secret_fallback_123',
+            { expiresIn: '7d' }
+        );
 
         res.status(201).json({
-            message: 'Usuario registrado. Por favor verifica tu correo.',
-            userId: result.insertId
+            message: 'Usuario registrado y validado exitosamente.',
+            token,
+            user
         });
 
     } catch (error) {
