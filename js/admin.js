@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNCIONES DE ESTADÍSTICAS ---
     const fetchUsersStat = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/auth/users', {
+            const res = await fetch(BACKEND_URL + '/api/auth/users', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNCIONES DE CATEGORÍAS ---
     const fetchCategories = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/categories');
+            const res = await fetch(BACKEND_URL + '/api/categories');
             const data = await res.json();
             if (res.ok) {
                 allCategories = data;
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name || !slug) return;
 
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/categories', {
+            const res = await fetch(BACKEND_URL + '/api/categories', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deleteCategory = async (id) => {
         if (!confirm('¿Seguro que deseas eliminar esta categoría? Si tiene publicaciones asociadas, fallará.')) return;
         try {
-            const res = await fetch(`http://127.0.0.1:3000/api/categories/${id}`, {
+            const res = await fetch(`${BACKEND_URL}/api/categories/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNCIONES DE PUBLICACIONES ---
     const fetchProducts = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/products');
+            const res = await fetch(BACKEND_URL + '/api/products');
             const data = await res.json();
             if (res.ok) {
                 allProducts = data;
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deleteProduct = async (id) => {
         if (!confirm('PELIGRO: ¿Estás seguro de que deseas eliminar permanentemente la publicación de este usuario?')) return;
         try {
-            const res = await fetch(`http://127.0.0.1:3000/api/products/${id}`, {
+            const res = await fetch(`${BACKEND_URL}/api/products/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchAllUsersData = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/auth/users', {
+            const res = await fetch(BACKEND_URL + '/api/auth/users', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchAllReviews = async () => {
         try {
-            const res = await fetch('http://127.0.0.1:3000/api/users/reviews', {
+            const res = await fetch(BACKEND_URL + '/api/users/reviews', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deleteReview = async (id) => {
         if (!confirm('¿Seguro que deseas borrar esta reseña de forma permanente?')) return;
         try {
-            const res = await fetch(`http://127.0.0.1:3000/api/users/reviews/${id}`, {
+            const res = await fetch(`${BACKEND_URL}/api/users/reviews/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
