@@ -14,7 +14,7 @@ exports.getAll = async (req, res) => {
         let queryParams = [];
 
         if (search) {
-            queryStr += ' AND (p.title LIKE ? OR p.description LIKE ?)';
+            queryStr += ' AND (p.title COLLATE utf8mb4_general_ci LIKE ? OR p.description COLLATE utf8mb4_general_ci LIKE ?)';
             queryParams.push(`%${search}%`, `%${search}%`);
         }
 
