@@ -9,19 +9,18 @@ const BACKEND_URL = 'https://marketplace-0mol.onrender.com';
 const originalFetch = window.fetch;
 window.fetch = async function () {
     let [resource, config] = arguments;
-    
+
     // Si la ruta empieza con /api/, le pegamos la URL de Render antes
     if (typeof resource === 'string' && resource.startsWith('/api/')) {
         resource = BACKEND_URL + resource;
-    } 
-    // Si la ruta empieza con localhost (tu código viejo), la cambiamos por Render
-    else if (typeof resource === 'string' && resource.includes('localhost:3000')) {
-        resource = resource.replace(/http:\/\/localhost:3000/g, BACKEND_URL)
-                           .replace(/http:\/\/127\.0\.0\.1:3000/g, BACKEND_URL);
     }
-    
-    return originalFetch(resource, config);
+    // Si la ruta empieza con localhost o 127.0.0.1 (tu código viejo), la cambiamos por Render
+    else if (typeof resource === 'string' && (resource.includes('localhost:3000') || resource.includes('127.0.0.1:3000'))) {
+        resource = resource.replace(/http:\/\/localhost:3000/g, BACKEND_URL)
+            .replace(/http:\/\/127\.0\.0\.1:3000/g, BACKEND_URL);
+    }
 
+    return originalFetch(resource, config);
 };
 // ---------------------------------------------------------------------------
 
