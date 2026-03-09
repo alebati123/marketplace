@@ -60,13 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok) {
-                    Swal.fire("Aviso", '¡Cuenta creada con éxito! Ingresando...', "success");
-                    localStorage.setItem('user_token', data.token);
-                    localStorage.setItem('user_data', JSON.stringify(data.user));
-                    localStorage.setItem('user_name', data.user.name);
-                    window.location.href = 'inicio.html';
+                    Swal.fire("Éxito", 'Registro exitoso, inicia sesión', "success").then(() => {
+                        const loginTab = document.querySelector('.auth-tab[data-target="login"]');
+                        if (loginTab) {
+                            loginTab.click();
+                        } else {
+                            window.location.reload();
+                        }
+                    });
                 } else {
-                    Swal.fire("Aviso", 'Error al registrarse: ' + (data.error || 'Ocurrió un problema'), "info");
+                    Swal.fire("Error", 'Error al registrarse', "error");
                 }
             } catch (error) {
                 console.error(error);
