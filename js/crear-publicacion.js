@@ -170,6 +170,36 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // --- Novedad: Verificar si el usuario tiene teléfono antes de permitirle publicar ---
+        try {
+            const profileRes = await fetch(BACKEND_URL + '/api/users/profile', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (profileRes.ok) {
+                const profileData = await profileRes.json();
+                if (!profileData.phone || profileData.phone.trim() === '') {
+                    Swal.fire({
+                        title: "Teléfono Requerido",
+                        text: "Para publicar un artículo o servicio, necesitas tener un número de contacto (WhatsApp) guardado. De esta manera los compradores podrán contactarte.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Ir a Mi Perfil",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'perfil.html';
+                        }
+                    });
+                    return; // Detenemos la publicación
+                }
+            }
+        } catch (error) {
+            console.error("Error verificando perfil del usuario:", error);
+            // Si falla la verificación fallamos silenciosamente aquí y dejamos que el backend lo bloquee
+        }
+        // ------------------------------------------------------------------------------------
+
         const pub_type = document.querySelector('input[name="pub_type"]:checked').value;
         const title = document.getElementById('titulo').value;
 

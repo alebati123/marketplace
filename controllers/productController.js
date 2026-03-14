@@ -14,8 +14,31 @@ exports.getAll = async (req, res) => {
         let queryParams = [];
 
         if (search) {
-            queryStr += ' AND (p.title COLLATE utf8mb4_general_ci LIKE ? OR p.description COLLATE utf8mb4_general_ci LIKE ?)';
-            queryParams.push(`%${search}%`, `%${search}%`);
+            const words = search.trim().split(/\s+/);
+            words.forEach(w => {
+                let word = w.toLowerCase();
+
+                // --- Simple Stemming en español ---
+                // Para que si buscan "cortar" encuentre "corta" y "cortadora"
+                if (word.length > 4) {
+                    if (word.endsWith('ando') || word.endsWith('iendo')) {
+                        word = word.slice(0, -4);
+                    } else if (word.endsWith('ar') || word.endsWith('er') || word.endsWith('ir')) {
+                        word = word.slice(0, -2);
+                    } else if (word.endsWith('es')) {
+                        word = word.slice(0, -2);
+                    } else if (word.endsWith('s')) {
+                        word = word.slice(0, -1);
+                    }
+                }
+
+                searchConditions.push('(p.title COLLATE utf8mb4_general_ci LIKE ? OR p.description COLLATE utf8mb4_general_ci LIKE ?)');
+                queryParams.push(`%${word}%`, `%${word}%`);
+            });
+
+            if (searchConditions.length > 0) {
+                queryStr += ' AND (' + searchConditions.join(' AND ') + ')';
+            }
         }
 
         if (category && category !== 'all') {
@@ -90,6 +113,12 @@ exports.create = async (req, res) => {
 
         if (!title || !category_id || !description || !price || !condition_status) {
             return res.status(400).json({ error: 'Faltan campos obligatorios' });
+        }
+
+        // Verificar que el usuario tenga un teléfono registrado
+        const [userCheck] = await pool.query('SELECT phone FROM users WHERE id = ?', [user_id]);
+        if (userCheck.length === 0 || !userCheck[0].phone || userCheck[0].phone.trim() === '') {
+            return res.status(403).json({ error: 'Debes tener un número de teléfono registrado en tu perfil para poder publicar.' });
         }
 
         const [result] = await pool.query(`
