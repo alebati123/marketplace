@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -26,14 +26,14 @@
         </div>
         <ul class="navbar-nav">
             <li><a href="inicio.html" class="nav-item">Inicio</a></li>
-            <li><a href="publicaciones.html" class="nav-item">CatÃ¡logo</a></li>
+            <li><a href="publicaciones.html" class="nav-item">Catálogo</a></li>
             <li><a href="servicios.html" class="nav-item">Servicios</a></li>
             <li class="auth-required" style="display: none;"><a href="crear-publicacion.html" class="nav-item">Publicar</a></li>
             <li><a href="nosotros.html" class="nav-item">Nosotros</a></li>
         </ul>
         <div class="navbar-actions">
-            <!-- Asumiendo usuario logueado en esta demo para maquetaciÃ³n -->
-            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar SesiÃ³n</a>
+            <!-- Asumiendo usuario logueado en esta demo para maquetación -->
+            <a href="auth.html" class="btn btn-outline" id="btn-login-nav">Iniciar Sesión</a>
             <a href="crear-publicacion.html" class="btn btn-primary auth-required" id="btn-publish-nav"
                 style="display: none;">Publicar</a>
         </div>
@@ -45,7 +45,7 @@
         <div class="breadcrumb" id="product-breadcrumb">
             <a href="publicaciones.html" class="btn btn-outline"
                 style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; margin-bottom: 1rem; border-color: var(--color-border);"><i
-                    class='bx bx-left-arrow-alt'></i> Volver al CatÃ¡logo</a>
+                    class='bx bx-left-arrow-alt'></i> Volver al Catálogo</a>
             <div style="margin-top: 0.5rem;">
                 <a href="inicio.html">Inicio</a> &gt;
                 <a href="publicaciones.html" id="bread-cat">Cargando...</a> &gt;
@@ -54,24 +54,26 @@
         </div>
 
         <div class="product-layout">
-            <!-- GalerÃ­a de Fotos -->
+            <!-- Galería de Fotos -->
             <div class="product-gallery">
                 <div class="main-image">
                     <img src="https://via.placeholder.com/800x600?text=Cargando+Imagen" alt="Producto principal"
                         id="main-img">
                 </div>
-                <!-- Miniaturas (PrÃ³ximamente dinÃ¡micas) -->
+                <!-- Miniaturas (Próximamente dinámicas) -->
                 <div class="thumbnail-list" id="thumb-list">
                     <!-- Se inyectaran si hay multiples fotos -->
                 </div>
             </div>
 
-            <!-- InformaciÃ³n del Producto y Vendedor -->
+            <!-- Información del Producto y Vendedor -->
             <div class="product-details">
-                <span class="badge condition new" id="prod-badge">...</span>
-                <span class="pub-date" id="prod-date">Cargando fecha...</span>
+                <div style="display: flex; align-items: center; gap: 0.8rem; margin: 1rem 0; flex-wrap: wrap;">
+                    <span class="pub-date" id="prod-date" style="margin: 0;">Cargando fecha...</span>
+                    <span id="prod-badge" style="display: inline-flex; align-items: center; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; background: rgba(0,0,0,0.07); color: #333;">...</span>
+                </div>
 
-                <h1 class="product-title" id="prod-title">Cargando TÃ­tulo...</h1>
+                <h1 class="product-title" id="prod-title">Cargando Título...</h1>
                 <div class="product-price" id="prod-price">$-.--</div>
 
                 <!-- Vendedor Card -->
@@ -82,12 +84,12 @@
                             <h4 id="seller-name">Cargando vendedor...</h4>
                             <div id="seller-rating-display"
                                 style="color: #ffb400; font-size: 0.9rem; margin-bottom: 0.2rem;">
-                                <!-- Estrellas dinÃ¡micas aquÃ­ -->
+                                <!-- Estrellas dinámicas aquí -->
                             </div>
-                            <p><i class='bx bx-map'></i> <span id="prod-location">Cargando ubicaciÃ³n...</span></p>
+                            <p><i class='bx bx-map'></i> <span id="prod-location">Cargando ubicación...</span></p>
                         </div>
                     </div>
-                    <!-- Botones de InteracciÃ³n -->
+                    <!-- Botones de Interacción -->
                     <a href="#" target="_blank" class="btn btn-whatsapp btn-block" id="btn-whatsapp">
                         <i class='bx bxl-whatsapp'></i> Contactar por WhatsApp
                     </a>
@@ -102,20 +104,15 @@
                         con el vendedor.</p>
                 </div>
 
-                <!-- DescripciÃ³n -->
+                <!-- Descripción -->
                 <div class="product-description">
-                    <h3>DescripciÃ³n</h3>
+                    <h3>Descripción</h3>
                     <p id="prod-desc">
-                        Cargando descripciÃ³n detallada...
+                        Cargando descripción detallada...
                     </p>
                 </div>
 
-                <div class="product-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">CategorÃ­a</span>
-                        <span class="meta-value" id="meta-cat">...</span>
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -146,20 +143,20 @@
                 <div class="form-group">
                     <label>Comentario (Opcional)</label>
                     <textarea id="rate-comment" class="form-control" rows="3"
-                        placeholder="Â¿CÃ³mo fue tu experiencia de compra o charla?"></textarea>
+                        placeholder="¿Cómo fue tu experiencia de compra o charla?"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block"><i class='bx bxs-paper-plane'></i> Enviar
-                    CalificaciÃ³n</button>
+                    Calificación</button>
             </form>
         </div>
     </div>
 
-    <!-- MÃ¡s Productos del Vendedor -->
+    <!-- Más Productos del Vendedor -->
     <section class="more-products-section container" style="margin-top: 3rem; margin-bottom: 3rem; display: none;"
         id="more-products-container">
         <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-main); font-size: 1.8rem;">
-            MÃ¡s de <span id="more-products-seller-name">este vendedor</span>
+            Más de <span id="more-products-seller-name">este vendedor</span>
         </h3>
         <!-- Usamos el mismo estilo de grilla del index -->
         <div class="product-grid" id="more-products-grid">

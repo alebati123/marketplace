@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${imageUrl}" alt="${p.title}">
                 </div>
                 <div class="product-info">
-                    <span class="product-category">${p.category_name}</span>
                     <h3 class="product-title">${p.title}</h3>
                     <div class="product-price">${formatPrice(p.price)}</div>
                     <div class="product-footer">

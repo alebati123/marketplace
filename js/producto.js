@@ -29,16 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('prod-price').textContent = formatPrice;
 
                 document.getElementById('prod-desc').textContent = product.description;
-                document.getElementById('meta-cat').textContent = product.category_name;
+
 
                 // Llenar estado y fechas
                 const badge = document.getElementById('prod-badge');
                 if (product.condition_status === 'nuevo') {
-                    badge.textContent = 'Nuevo'; badge.className = 'badge condition new';
+                    badge.textContent = '✓ Nuevo';
+                    badge.style.background = 'rgba(16, 185, 129, 0.12)';
+                    badge.style.color = '#059669';
                 } else if (product.condition_status === 'usado') {
-                    badge.textContent = 'Usado'; badge.className = 'badge condition used';
+                    badge.textContent = 'Usado';
+                    badge.style.background = 'rgba(245, 158, 11, 0.12)';
+                    badge.style.color = '#d97706';
                 } else {
-                    badge.textContent = 'Como Nuevo'; badge.className = 'badge condition';
+                    badge.textContent = 'Como Nuevo';
+                    badge.style.background = 'rgba(99, 102, 241, 0.12)';
+                    badge.style.color = '#4f46e5';
                 }
 
                 const dateObj = new Date(product.created_at);
@@ -294,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <img src="${imageUrl}" alt="${p.title}">
                                     </div>
                                     <div class="product-info">
-                                        <span class="product-category">${p.category_name}</span>
                                         <h3 class="product-title">${p.title}</h3>
                                         <div class="product-price">${formatPrice(p.price)}</div>
                                     </div>
