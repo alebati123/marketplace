@@ -5,8 +5,14 @@ exports.getAll = async (req, res) => {
     try {
         const { search, category, condition, sort, min_price, max_price } = req.query;
         
+        // 1. Consulta base (Agregamos c.slug as category_slug que lo necesita el frontend)
         let queryStr = `
-            SELECT p.*, c.name as category_name, u.name as seller_name, u.phone as seller_phone, u.location as user_location
+            SELECT p.*, 
+                   c.name as category_name, 
+                   c.slug as category_slug, 
+                   u.name as seller_name, 
+                   u.phone as seller_phone, 
+                   u.location as user_location
             FROM products p
             JOIN categories c ON p.category_id = c.id
             JOIN users u ON p.user_id = u.id
@@ -15,29 +21,24 @@ exports.getAll = async (req, res) => {
         
         let queryParams = [];
 
-        // Lógica de búsqueda mejorada
+        // 2. Lógica de búsqueda (Solución al ReferenceError)
         if (search && search.trim() !== '') {
             const words = search.trim().split(/\s+/);
-            let searchConditions = []; // Se declara aquí para asegurar que exista en este bloque
+            let searchConditions = []; // Se inicializa SIEMPRE antes de usarse
             
             words.forEach(w => {
                 let word = w.toLowerCase();
 
-                // --- Simple Stemming en español ---
+                // Simple Stemming para mejorar resultados
                 if (word.length > 4) {
-                    if (word.endsWith('ando') || word.endsWith('iendo')) {
-                        word = word.slice(0, -4);
-                    } else if (word.endsWith('ar') || word.endsWith('er') || word.endsWith('ir')) {
-                        word = word.slice(0, -2);
-                    } else if (word.endsWith('es')) {
-                        word = word.slice(0, -2);
-                    } else if (word.endsWith('s')) {
-                        word = word.slice(0, -1);
-                    }
+                    if (word.endsWith('ando') || word.endsWith('iendo')) word = word.slice(0, -4);
+                    else if (word.endsWith('ar') || word.endsWith('er') || word.endsWith('ir')) word = word.slice(0, -2);
+                    else if (word.endsWith('es')) word = word.slice(0, -2);
+                    else if (word.endsWith('s')) word = word.slice(0, -1);
                 }
 
-                // Agregamos la condición para esta palabra (buscando en título y descripción)
-                searchConditions.push('(p.title LIKE ? OR p.description LIKE ?)');
+                // Forzamos la misma codificación (collation) en ambos lados para evitar el choque en la BD
+                searchConditions.push('(p.title COLLATE utf8mb4_general_ci LIKE ? COLLATE utf8mb4_general_ci OR p.description COLLATE utf8mb4_general_ci LIKE ? COLLATE utf8mb4_general_ci)');
                 queryParams.push(`%${word}%`, `%${word}%`);
             });
 
@@ -46,30 +47,28 @@ exports.getAll = async (req, res) => {
             }
         }
 
-        // Filtro por categoría
+        // 3. Filtros adicionales
         if (category && category !== 'all') {
             queryStr += ' AND c.slug = ?';
             queryParams.push(category);
         }
 
-        // Filtro por estado (nuevo/usado)
         if (condition) {
             queryStr += ' AND p.condition_status = ?';
             queryParams.push(condition);
         }
 
-        // Filtro por rango de precio
-        if (min_price) {
+        if (min_price && min_price !== '') {
             queryStr += ' AND p.price >= ?';
-            queryParams.push(min_price);
+            queryParams.push(parseFloat(min_price));
         }
 
-        if (max_price) {
+        if (max_price && max_price !== '') {
             queryStr += ' AND p.price <= ?';
-            queryParams.push(max_price);
+            queryParams.push(parseFloat(max_price));
         }
 
-        // Ordenamiento
+        // 4. Ordenamiento
         if (sort === 'price_asc') {
             queryStr += ' ORDER BY p.price ASC';
         } else if (sort === 'price_desc') {
@@ -78,13 +77,14 @@ exports.getAll = async (req, res) => {
             queryStr += ' ORDER BY p.created_at DESC';
         }
 
+        // Ejecutar consulta
         const [result] = await pool.query(queryStr, queryParams);
         res.json(result);
 
     } catch (error) {
-        // Importante: esto mostrará el error real en la terminal de tu servidor
-        console.error('Error en getAll products:', error); 
-        res.status(500).json({ error: 'Error al obtener publicaciones' });
+        // Log detallado para que veas el error real en tu terminal/consola de Node
+        console.error('ERROR CRÍTICO EN GET_ALL_PRODUCTS:', error.message);
+        res.status(500).json({ error: 'Error al obtener publicaciones', details: error.message });
     }
 };
 
@@ -149,7 +149,7 @@ exports.create = async (req, res) => {
     }
 };
 
-// Obtener por categoria
+// Obtener por categoría
 exports.getByCategory = async (req, res) => {
     try {
         const { slug } = req.params;
