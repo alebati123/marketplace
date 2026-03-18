@@ -4,6 +4,7 @@ const { pool } = require('../config/db-mysql');
 exports.getAll = async (req, res) => {
     try {
         const { search, category, condition, sort, min_price, max_price } = req.query;
+        
         let queryStr = `
             SELECT p.*, c.name as category_name, u.name as seller_name, u.phone as seller_phone, u.location as user_location
             FROM products p
@@ -11,15 +12,18 @@ exports.getAll = async (req, res) => {
             JOIN users u ON p.user_id = u.id
             WHERE p.status = 'activo'
         `;
+        
         let queryParams = [];
 
-        if (search) {
+        // Lógica de búsqueda mejorada
+        if (search && search.trim() !== '') {
             const words = search.trim().split(/\s+/);
+            let searchConditions = []; // Se declara aquí para asegurar que exista en este bloque
+            
             words.forEach(w => {
                 let word = w.toLowerCase();
 
                 // --- Simple Stemming en español ---
-                // Para que si buscan "cortar" encuentre "corta" y "cortadora"
                 if (word.length > 4) {
                     if (word.endsWith('ando') || word.endsWith('iendo')) {
                         word = word.slice(0, -4);
@@ -32,7 +36,8 @@ exports.getAll = async (req, res) => {
                     }
                 }
 
-                searchConditions.push('(p.title COLLATE utf8mb4_general_ci LIKE ? OR p.description COLLATE utf8mb4_general_ci LIKE ?)');
+                // Agregamos la condición para esta palabra (buscando en título y descripción)
+                searchConditions.push('(p.title LIKE ? OR p.description LIKE ?)');
                 queryParams.push(`%${word}%`, `%${word}%`);
             });
 
@@ -41,16 +46,19 @@ exports.getAll = async (req, res) => {
             }
         }
 
+        // Filtro por categoría
         if (category && category !== 'all') {
             queryStr += ' AND c.slug = ?';
             queryParams.push(category);
         }
 
+        // Filtro por estado (nuevo/usado)
         if (condition) {
             queryStr += ' AND p.condition_status = ?';
             queryParams.push(condition);
         }
 
+        // Filtro por rango de precio
         if (min_price) {
             queryStr += ' AND p.price >= ?';
             queryParams.push(min_price);
@@ -74,7 +82,8 @@ exports.getAll = async (req, res) => {
         res.json(result);
 
     } catch (error) {
-        console.error(error);
+        // Importante: esto mostrará el error real en la terminal de tu servidor
+        console.error('Error en getAll products:', error); 
         res.status(500).json({ error: 'Error al obtener publicaciones' });
     }
 };
@@ -109,13 +118,12 @@ exports.getById = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const { title, category_id, description, price, condition_status, image_url, additional_images, location_type, location_custom } = req.body;
-        const user_id = req.user.id; // Viene del token JWT
+        const user_id = req.user.id; 
 
         if (!title || !category_id || !description || !price || !condition_status) {
             return res.status(400).json({ error: 'Faltan campos obligatorios' });
         }
 
-        // Verificar que el usuario tenga un teléfono registrado
         const [userCheck] = await pool.query('SELECT phone FROM users WHERE id = ?', [user_id]);
         if (userCheck.length === 0 || !userCheck[0].phone || userCheck[0].phone.trim() === '') {
             return res.status(403).json({ error: 'Debes tener un número de teléfono registrado en tu perfil para poder publicar.' });
@@ -179,7 +187,7 @@ exports.getMine = async (req, res) => {
     }
 };
 
-// Actualizar publicación (titulo, precio y descripcion)
+// Actualizar publicación
 exports.update = async (req, res) => {
     try {
         const { id } = req.params;
@@ -187,7 +195,6 @@ exports.update = async (req, res) => {
         const user_id = req.user.id;
         const role = req.user.role;
 
-        // Verificar existencia y propiedad
         const [check] = await pool.query('SELECT user_id FROM products WHERE id = ?', [id]);
         if (check.length === 0) return res.status(404).json({ error: 'Publicación no encontrada' });
 
@@ -212,7 +219,7 @@ exports.update = async (req, res) => {
     }
 };
 
-// Eliminar (o desactivar) publicación
+// Eliminar publicación
 exports.delete = async (req, res) => {
     try {
         const { id } = req.params;
@@ -235,7 +242,7 @@ exports.delete = async (req, res) => {
     }
 };
 
-// Obtener otras publicaciones del mismo vendedor (hasta 4)
+// Obtener otras publicaciones del mismo vendedor
 exports.getMoreFromUser = async (req, res) => {
     try {
         const { userId, currentProductId } = req.params;
